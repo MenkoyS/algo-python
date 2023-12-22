@@ -77,9 +77,10 @@ class Game:
         Check if a player has won the game.
         :return: bool, True if a player has won, False otherwise.
         """
+        pass
 
     def gameLoop(self):
         """
         Main game loop to handle game logic.
         """
-        self.board = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
+        pass
