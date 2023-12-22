@@ -7,39 +7,39 @@ class Pawn:
     """
     
     def __init__(self, player=1, coordX=0, coordY=0) -> None:
-        self.player = 0
-        self.coordX = 0
-        self.coordY = 0
+        self.player = player
+        self.coordX = coordX
+        self.coordY = coordY
 
-    def getCoordX(self):
+    def getCoordX(self) -> int:
         """
         Get the X-coordinate of the pawn.
         :return: int, The X-coordinate of the pawn.
         """
         return self.coordX
 
-    def getCoordY(self):
+    def getCoordY(self) -> int:
         """
         Get the Y-coordinate of the pawn.
         :return: int, The Y-coordinate of the pawn.
         """
         return self.coordY
 
-    def getPlayer(self):
+    def getPlayer(self) -> int:
         """
         Get the player to whom the pawn belongs.
         :return int: The player number (1 or 2).
         """
-        return self.coordX
+        return self.player
 
-    def setCoordX(self, newCoordX):
+    def setCoordX(self, newCoordX) -> None:
         """
         Set the X-coordinate of the pawn.
         :param newCoordX: int, The new X-coordinate for the pawn.
         """
         self.coordX = newCoordX
 
-    def setCoordY(self, newCoordY):
+    def setCoordY(self, newCoordY) -> None:
         """
         Set the Y-coordinate of the pawn.
         :param newCoordY: int, The new Y-coordinate for the pawn.
