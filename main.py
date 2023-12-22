@@ -1,20 +1,57 @@
 import tkinter as tk
-import random
+
+class Pawn:
+    def __init__(self, player=1, coordX=0, coordY=0) -> None:
+        self.player = 0
+        self.coordX = 0
+        self.coordY = 0
+    
+    def getCoordX(self):
+        return self.coordX
+    
+    def getCoordY(self):
+        return self.coordY
+    
+    def getPlayer(self):
+        return self.coordX
+    
+    def setCoordX(self, newCoordX):
+        self.coordX = newCoordX
+
+    def setCoordY(self, newCoordY):
+        self.coordY = newCoordY
 
 class Game:
-    def __init__(self, rows, cols):
+    def __init__(self, rows=10, cols=10, pawnsToAlign=5):
         self.rows = rows
         self.cols = cols
-        self.board = [[random.choice([0, 1]) for _ in range(cols)] for _ in range(rows)]
+        self.pawnsToAlign = pawnsToAlign
+
+        self.board = [[0 for _ in range(cols)] for _ in range(rows)]
+        self.player1 = Pawn(1)
+        self.player2 = Pawn(2)
+    
+    def setRows(self, numberRows):
+        self.rows = numberRows
+    
+    def setCols(self, numberCols):
+        self.cols = numberCols
 
     def getCell(self, row, col):
         return self.board[row][col]
 
-    def toggleCell(self, row, col):
-        self.board[row][col] = 1 - self.board[row][col]
+    def setCell(self, row, col, value):
+        self.board[row][col] = value
+
+    def possibleCell(self, pawn):
+        pass
 
     def checkWin(self):
         pass
+
+    def gameLoop(self):
+        pass
+
 
 class GameGUI:
     def __init__(self, root, game):
