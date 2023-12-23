@@ -54,7 +54,7 @@ class Game:
         """
         Get a list of possible cells for the pawn to move to.
         :param pawn: object, The pawn for which to find possible cells.
-        :return: list<tuple>, A list of possible cell coordinates.
+        :return: list<tuple<int>>, A list of possible cell coordinates.
         """
         pawnX = pawn.getCoordX()
         pawnY = pawn.getCoordY()
@@ -76,33 +76,32 @@ class Game:
     def checkWin(self, player, nbAligned):
         """
         Check if a player has won the game.
-        :player:
-        :nbAligned:
-        :return: bool, True if the player has won, False otherwise.
+        :param player: object, The player for whom the win is being checked.
+        :param nbAligned: int, The number of aligned elements required for a win.
+        :return: bool, Indicating whether the player has won.
         """
-        if not self.possibleCell(self.player2 if player == self.player1 else self.player1):
+        # If the enemy player can't move the player won
+        enemyPlayer = self.player2 if player == self.player1 else self.player1
+        if not self.possibleCell(enemyPlayer):
             return True
 
+        # We check if the player has aligned diagonally the needed elements to win
         for i in range(self.rows - nbAligned + 1):
             for j in range(self.columns):
+                
+                # Check what diagonals we need to check (left or right or both)
+                diagonalsToCheck = []
+                if j + nbAligned < self.columns:
+                    diagonalsToCheck.append(1)
+                if j - nbAligned >= 0:
+                    diagonalsToCheck.append(-1)
 
-
-                    # //TODO Optimize
-                    if j + nbAligned < self.columns:
-                        found_line = True
-                        for k in range(nbAligned):
-                            if self.board[i + k][j + k] != player.getPlayer():
-                                found_line = False
-                                break
-                        if found_line:
-                            return True
-                    if j - nbAligned >= 0:
-                        found_line = True
-                        for k in range(nbAligned):
-                            if self.board[i + k][j - k] != player.getPlayer():
-                                found_line = False
-                                break
-                        if found_line:
+                # Check for each diagonal if there is 5 aligned elements of the player
+                for increment in diagonalsToCheck:
+                    for k in range(nbAligned):
+                        if self.board[i + k][j + k * increment] != player.getPlayer():
+                            break
+                        if k+1 == nbAligned:
                             return True
         return False
 
