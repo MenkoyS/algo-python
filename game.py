@@ -53,21 +53,20 @@ class Game:
     def possibleCell(self, pawn) -> list:
         """
         Get a list of possible cells for the pawn to move to.
-        :param pawn: object, The pawn for which to find possible cells.
+        :param pawn: object<Pawn>, The pawn for which to find possible cells.
         :return: list[tuple[int, int]], A list of possible cell coordinates.
         """
         pawnX, pawnY = pawn.getCoordX(), pawn.getCoordY()
         return [(x, y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
                 if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows]
     
-    def movePawn(self, origin, destination, pawn) -> None:
+    def movePawn(self, pawn, destination) -> None:
         """
         Move a pawn from the origin to the destination on the game board.
-        :param origin: tuple, The coordinates (x, yof the pawn's current position.
+        :param pawn: object<Pawn>, The pawn to be moved.
         :param destination: tuple, The coordinates (x, y) of the pawn's new position.
-        :param pawn: object, The pawn to be moved.
         """
-        originX, originY = origin
+        originX, originY = pawn.getCoordX, pawn.getCoordY
         destinationX, destinationY = destination
         self.board[destinationY][destinationX] = pawn
         self.board[originY][originX] = pawn.getPlayer
@@ -141,7 +140,7 @@ class Game:
         for yCoord in range(self.rows):
             for xCoord in range(self.columns):
                 if self.checkLines(player, nbAligned, (xCoord, yCoord)) or self.checkDiagonals(player, nbAligned, (xCoord, yCoord)):
-                    return True, (xCoord, yCoord)
+                    return True
                 
         return False
 
@@ -149,4 +148,40 @@ class Game:
         """
         Main game loop to handle game logic.
         """
-        pass
+        hasPlayerWon = False
+        round = 1
+        playerToPlay = self.player1
+
+        # Replace getting coords by clicking in GUI
+        player1xCoord = int(input("Choose x coordinate to place your pawn : ")) # Horizontal
+        player1yCoord = int(input("Choose y coordinate to place your pawn : ")) # Vertical
+        
+        player2xCoord = int(input("Choose x coordinate to place your pawn : ")) # Horizontal
+        player2yCoord = int(input("Choose y coordinate to place your pawn : ")) # Vertical
+
+        # Setting players to their chosen coordinates
+        self.player1.setCoordX = player1xCoord
+        self.player1.setCoordY = player1yCoord
+
+        self.player2.setCoordX = player2xCoord
+        self.player2.setCoordY = player2yCoord
+
+        while not hasPlayerWon:
+            
+            # Player choose where to move
+            xMove, yMove = -1, -1
+            while not (xMove, yMove) in self.possibleCell(playerToPlay):
+                # Replace by click on case in GUI
+                xMove = int(input("Choose x coordinate to move your pawn : ")) # Horizontal
+                yMove = int(input("Choose  coordinate to move your pawn : ")) # Vertical
+
+            # We move the player to its chosen move
+            self.movePawn(playerToPlay, (xMove, yMove))
+
+            # We check if the player has won with this move
+            hasPlayerWon = self.checkWin(playerToPlay, self.pawnsToAlign)
+            if hasPlayerWon:
+                break
+
+            playerToPlay = self.player2 if playerToPlay == self.player1 else self.player1
+            round += 1
