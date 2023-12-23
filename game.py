@@ -71,7 +71,7 @@ class Game:
         self.board[destinationY][destinationX] = pawn
         self.board[originY][originX] = pawn.getPlayer
 
-    def checkDiagonals(self, player, nbAligned, coordinates):
+    def checkDiagonals(self, player, nbAligned, coordinates) -> bool:
         """
         Check if the player has aligned the required number of elements diagonally to win.
         :param player: object<Pawn>, The player for whom the win is being checked.
@@ -97,7 +97,7 @@ class Game:
                     return True
         return False
 
-    def checkLines(self, player, nbAligned, coordinates):
+    def checkLines(self, player, nbAligned, coordinates) -> bool:
         """
         Check if the player has aligned the required number of elements horizontally or vertically to win.
         :param player: object<Pawn>, The player for whom the win is being checked.
@@ -124,7 +124,7 @@ class Game:
         return False
 
 
-    def checkWin(self, player, nbAligned):
+    def checkWin(self, player, nbAligned) -> bool:
         """
         Check if a player has won the game.
         :param player: object<Pawn>, The player for whom the win is being checked.
@@ -144,9 +144,10 @@ class Game:
                 
         return False
 
-    def gameLoop(self):
+    def gameLoop(self) -> None:
         """
         Main game loop to handle game logic.
+        This method implements the main loop of the game, allowing players to make moves and checks for a win condition in each round.
         """
         hasPlayerWon = False
         round = 1
