@@ -57,7 +57,7 @@ class Game:
         :return: list[tuple[int, int]], A list of possible cell coordinates.
         """
         pawnX, pawnY = pawn.getCoordX(), pawn.getCoordY()
-        return [(x, y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
+        return [(pawnX+x, pawnY+y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
                 if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows]
     
     def movePawn(self, pawn, destination) -> None:
@@ -66,10 +66,10 @@ class Game:
         :param pawn: object<Pawn>, The pawn to be moved.
         :param destination: tuple, The coordinates (x, y) of the pawn's new position.
         """
-        originX, originY = pawn.getCoordX, pawn.getCoordY
+        originX, originY = pawn.getCoordX(), pawn.getCoordY()
         destinationX, destinationY = destination
         self.board[destinationY][destinationX] = pawn
-        self.board[originY][originX] = pawn.getPlayer
+        self.board[originY][originX] = pawn.getPlayer()
 
     def checkDiagonals(self, player, nbAligned, coordinates) -> bool:
         """
@@ -83,9 +83,9 @@ class Game:
         diagonalsToCheck = []
 
         # Check what diagonals we need to check (left or right or both)
-        if x + nbAligned < self.columns:
+        if y + (nbAligned - 1) < self.columns and x + (nbAligned - 1) < self.columns:
             diagonalsToCheck.append(1)
-        if x - nbAligned >= 0:
+        if y + (nbAligned - 1) < self.columns and x - (nbAligned - 1) >= 0:
             diagonalsToCheck.append(-1)
 
         # Check for each diagonal if there is 5 aligned elements of the player
@@ -109,9 +109,9 @@ class Game:
         linesToCheck = []
         
         # Check what lines we need to check (horizontal or vertical or both)
-        if x + nbAligned < self.columns:
+        if x + nbAligned - 1 < self.columns:
             linesToCheck.append((1, 0))
-        if y + nbAligned < self.rows:
+        if y + nbAligned - 1 < self.rows:
             linesToCheck.append((0, 1))
 
         # Check for each lines if there is 5 aligned elements of the player
@@ -161,11 +161,11 @@ class Game:
         player2yCoord = int(input("Choose y coordinate to place your pawn : ")) # Vertical
 
         # Setting players to their chosen coordinates
-        self.player1.setCoordX = player1xCoord
-        self.player1.setCoordY = player1yCoord
+        self.player1.setCoordX(player1xCoord)
+        self.player1.setCoordY(player1yCoord)
 
-        self.player2.setCoordX = player2xCoord
-        self.player2.setCoordY = player2yCoord
+        self.player2.setCoordX(player2xCoord)
+        self.player2.setCoordY(player2yCoord)
 
         self.board[player1yCoord][player1xCoord] = self.player1
         self.board[player2yCoord][player2xCoord] = self.player2
