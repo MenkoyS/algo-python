@@ -16,7 +16,7 @@ class Game:
 
         self.player1 = Pawn(1)
         self.player2 = Pawn(2)
-        self.board = [[randint(0, 1) for _ in range(self.columns)] for _ in range(self.rows)]
+        self.board = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
 
     def setRows(self, numberRows) -> None:
         """
@@ -166,6 +166,9 @@ class Game:
 
         self.player2.setCoordX = player2xCoord
         self.player2.setCoordY = player2yCoord
+
+        self.board[player1yCoord][player1xCoord] = self.player1
+        self.board[player2yCoord][player2xCoord] = self.player2
 
         while not hasPlayerWon:
             
