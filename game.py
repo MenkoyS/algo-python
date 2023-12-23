@@ -54,10 +54,9 @@ class Game:
         """
         Get a list of possible cells for the pawn to move to.
         :param pawn: object, The pawn for which to find possible cells.
-        :return: list<tuple<int>>, A list of possible cell coordinates.
+        :return: list[tuple[int, int]], A list of possible cell coordinates.
         """
-        pawnX = pawn.getCoordX()
-        pawnY = pawn.getCoordY()
+        pawnX, pawnY = pawn.getCoordX(), pawn.getCoordY()
         return [(x, y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
                 if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows]
     
@@ -73,10 +72,63 @@ class Game:
         self.board[destinationY][destinationX] = pawn
         self.board[originY][originX] = pawn.getPlayer
 
+    def checkDiagonals(self, player, nbAligned, coordinates):
+        """
+        Check if the player has aligned the required number of elements diagonally to win.
+        :param player: object<Pawn>, The player for whom the win is being checked.
+        :param nbAligned: int, The number of aligned elements required for a win.
+        :param coordinates: tuple[int, int], The starting coordinates to check diagonals.
+        :return: bool, True if the player has won diagonally, False otherwise.
+        """
+        x, y = coordinates
+        diagonalsToCheck = []
+
+        # Check what diagonals we need to check (left or right or both)
+        if x + nbAligned < self.columns:
+            diagonalsToCheck.append(1)
+        if x - nbAligned >= 0:
+            diagonalsToCheck.append(-1)
+
+        # Check for each diagonal if there is 5 aligned elements of the player
+        for increment in diagonalsToCheck:
+            for k in range(nbAligned):
+                if self.board[y + k][x + k * increment] != player.getPlayer():
+                    break
+                if k+1 == nbAligned:
+                    return True
+        return False
+
+    def checkLines(self, player, nbAligned, coordinates):
+        """
+        Check if the player has aligned the required number of elements horizontally or vertically to win.
+        :param player: object<Pawn>, The player for whom the win is being checked.
+        :param nbAligned: int, The number of aligned elements required for a win.
+        :param coordinates: tuple[int, int], The starting coordinates to check lines.
+        :return: bool, True if the player has won horizontally or vertically, False otherwise.
+        """
+        x, y = coordinates
+        linesToCheck = []
+        
+        # Check what lines we need to check (horizontal or vertical or both)
+        if x + nbAligned < self.columns:
+            linesToCheck.append((1, 0))
+        if y + nbAligned < self.rows:
+            linesToCheck.append((0, 1))
+
+        # Check for each lines if there is 5 aligned elements of the player
+        for xMult, yMult in linesToCheck:
+            for k in range(nbAligned):
+                if self.board[y + k * yMult][x + k * xMult] != player.getPlayer():
+                    break
+                if k+1 == nbAligned:
+                    return True
+        return False
+
+
     def checkWin(self, player, nbAligned):
         """
         Check if a player has won the game.
-        :param player: object, The player for whom the win is being checked.
+        :param player: object<Pawn>, The player for whom the win is being checked.
         :param nbAligned: int, The number of aligned elements required for a win.
         :return: bool, Indicating whether the player has won.
         """
@@ -85,24 +137,12 @@ class Game:
         if not self.possibleCell(enemyPlayer):
             return True
 
-        # We check if the player has aligned diagonally the needed elements to win
-        for i in range(self.rows - nbAligned + 1):
-            for j in range(self.columns):
+        # If the player has aligned the required number of elements he has won
+        for yCoord in range(self.rows):
+            for xCoord in range(self.columns):
+                if self.checkLines(player, nbAligned, (xCoord, yCoord)) or self.checkDiagonals(player, nbAligned, (xCoord, yCoord)):
+                    return True, (xCoord, yCoord)
                 
-                # Check what diagonals we need to check (left or right or both)
-                diagonalsToCheck = []
-                if j + nbAligned < self.columns:
-                    diagonalsToCheck.append(1)
-                if j - nbAligned >= 0:
-                    diagonalsToCheck.append(-1)
-
-                # Check for each diagonal if there is 5 aligned elements of the player
-                for increment in diagonalsToCheck:
-                    for k in range(nbAligned):
-                        if self.board[i + k][j + k * increment] != player.getPlayer():
-                            break
-                        if k+1 == nbAligned:
-                            return True
         return False
 
     def gameLoop(self):
