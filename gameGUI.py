@@ -1,26 +1,59 @@
-# gameGUI.py
-
 import tkinter as tk
-from tkinter import ttk
 
-class GameGUI:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Game GUI")
+class JeuDeGrille:
+    def __init__(self, root, taille_plateau):
+        self.root = root
+        self.root.title("Jeu de Grille")
+        
+        self.taille_plateau = taille_plateau
+        self.cote_case = 0
+        self.joueur_actuel = 1
 
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
+        self.calculer_taille_case()
 
-        main_frame = ttk.Frame(self.root, padding=(50, 20))
-        main_frame.place(relx=0.5, rely=0.5, anchor='center')
+        self.canevas = tk.Canvas(self.root, bg="black", width=2*self.cote_case*self.taille_plateau, height=2*self.cote_case*self.taille_plateau)
+        self.canevas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        label_font_size = int(24 * screen_width / 1920)
+        self.label_joueur = tk.Label(self.root, text="Tour du Joueur 1", font=("Helvetica", 16), fg="white", bg="black")
+        self.label_joueur.pack(side=tk.BOTTOM, pady=10)
 
-        ttk.Label(main_frame, text="Hello", anchor='center', font=("TkDefaultFont", label_font_size)).grid(row=0, column=0, pady=(0, 10))
+        self.dessiner_quadrillage()
 
-    def run(self):
-        self.root.mainloop()
+        self.canevas.bind("<Button-1>", self.selectionner_case)
+
+    def calculer_taille_case(self):
+        self.cote_case = min(self.root.winfo_screenwidth(), self.root.winfo_screenheight() - 50) / (2 * self.taille_plateau)
+
+    def dessiner_quadrillage(self):
+        for i in range(self.taille_plateau + 1):
+            x = i * 2 * self.cote_case
+            self.canevas.create_line(x, 0, x, 2 * self.cote_case * self.taille_plateau, fill="white")
+
+        for i in range(self.taille_plateau + 1):
+            y = i * 2 * self.cote_case
+            self.canevas.create_line(0, y, 2 * self.cote_case * self.taille_plateau, y, fill="white")
+
+    def selectionner_case(self, event):
+        if 0 <= event.x < 2 * self.cote_case * self.taille_plateau and 0 <= event.y < 2 * self.cote_case * self.taille_plateau:
+            col = int(event.x / (2 * self.cote_case))
+            row = int(event.y / (2 * self.cote_case))
+
+            taille_boule = 0.7
+            couleur = "blue" if self.joueur_actuel == 1 else "red"
+            self.canevas.create_oval(col * 2 * self.cote_case + (1-taille_boule)*self.cote_case,
+                                     row * 2 * self.cote_case + (1-taille_boule)*self.cote_case,
+                                     (col + 1) * 2 * self.cote_case - (1-taille_boule)*self.cote_case,
+                                     (row + 1) * 2 * self.cote_case - (1-taille_boule)*self.cote_case,
+                                     fill=couleur, outline="white")
+
+            self.joueur_actuel = 3 - self.joueur_actuel
+            self.label_joueur.config(text=f"Tour du Joueur {self.joueur_actuel}")
 
 if __name__ == "__main__":
-    app = GameGUI()
-    app.run()
+    taille_plateau = 8
+    root = tk.Tk()
+    root.attributes('-fullscreen', True)
+
+    jeu = JeuDeGrille(root, taille_plateau)
+
+    root.mainloop()

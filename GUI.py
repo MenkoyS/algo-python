@@ -1,3 +1,5 @@
+# GUI.py
+
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
@@ -53,11 +55,11 @@ class LobbyGUI:
         self.pawn_label = ttk.Label(main_frame, text=f"Chosen Pawn: {int(self.pawn_var.get())}", anchor='center', font=("TkDefaultFont", label_font_size))
         self.pawn_label.grid(row=6, column=0, columnspan=2, pady=(20, 0))
         quit_button_text = "Go windowed"
-        self.quit_button = ttk.Button(main_frame, text=quit_button_text, command=self.toggle_fullscreen)
+        self.quit_button = ttk.Button(main_frame, text=quit_button_text, command=self.toggleFullscreen)
         self.quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
         volume_slider = ttk.Scale(main_frame, from_=0, to=100, variable=self.volume_var, orient=tk.HORIZONTAL, length=screen_width // 4, command=self.updateVolume, style="TScale")
         volume_slider.grid(row=8, column=0, columnspan=2, pady=(20, 0), padx=(0, 20), sticky='se')
-        new_window_button = ttk.Button(main_frame, text="New Window", command=self.open_new_window)
+        new_window_button = ttk.Button(main_frame, text="New Window", command=self.openNewWindow)
         new_window_button.grid(row=9, column=0, columnspan=2, pady=(20, 0))
 
     def updateSizeSliderLabel(self, event=None):
@@ -74,16 +76,16 @@ class LobbyGUI:
         volume_level = self.volume_var.get() / 100
         mixer.music.set_volume(volume_level)
 
-    def toggle_fullscreen(self):
+    def toggleFullscreen(self):
         self.fullscreen_var.set(not self.fullscreen_var.get())
         self.root.attributes('-fullscreen', self.fullscreen_var.get())
         quit_button_text = "Go windowed" if self.fullscreen_var.get() else "Go fullscreen"
         self.quit_button["text"] = quit_button_text
 
-    def open_new_window(self):
+    def openNewWindow(self):
         self.root.destroy()
         mixer.music.stop()
-        new_window = GameGUI()
+        new_window = GameGUI(size=int(self.size_var.get()))
         new_window.run()
 
     def run(self):
