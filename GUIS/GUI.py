@@ -5,7 +5,7 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 from pygame import mixer
 import os
-from gameGUI import GameGUI
+from GUIS.gameGUI import GameGUI
 
 class LobbyGUI:
     def __init__(self):

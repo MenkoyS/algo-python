@@ -1,6 +1,6 @@
 import unittest
-from game import Game
-from pawn import Pawn
+from resources.game import Game
+from resources.pawn import Pawn
 
 class TestGame(unittest.TestCase):
 

@@ -1,5 +1,5 @@
-from game import Game
-from GUI import *
+from resources.game import Game
+from GUIS.GUI import *
 
 if __name__ == "__main__":
     game = Game(rows=10, columns=10, pawnsToAlign=5)
