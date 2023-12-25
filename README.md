@@ -9,7 +9,10 @@ Avant de lancer le script, si tous les modules ne sont pas installés, voici com
         pip install tkinter
         pip install os 
         pip install ttkthemes
-        pip install pygame
+        pip install pygame     
+        pip install imageio
+FFMPEG: pip install imageio[ffmpeg]
+pyav:   pip install imageio[pyav]
 
 Si le script présente toujours une ou des erreurs, veuillez contacter les créateurs du Jeu par une de ces adresses mail : 
 

@@ -1,4 +1,6 @@
 import tkinter as tk
+from pygame import mixer
+
 
 class GameGUI:
     def __init__(self, root, taille_plateau):
@@ -25,9 +27,8 @@ class GameGUI:
         self.cote_case = min(self.root.winfo_screenwidth(), self.root.winfo_screenheight() - 100) / (2 * self.taille_plateau)
 
     def dessiner_quadrillage(self):
-        # Calculer la position de départ pour centrer le quadrillage
         self.start_x = (self.root.winfo_screenwidth() - 2 * self.cote_case * self.taille_plateau) / 2
-        self.start_y = (self.root.winfo_screenheight() - 2 * self.cote_case * self.taille_plateau) / 4  # ajuster le 3 à votre convenance
+        self.start_y = (self.root.winfo_screenheight() - 2 * self.cote_case * self.taille_plateau) / 4
 
         for i in range(self.taille_plateau + 1):
             x = self.start_x + i * 2 * self.cote_case
@@ -41,14 +42,12 @@ class GameGUI:
         x = event.x
         y = event.y
 
-        # Vérifier que les coordonnées du clic sont à l'intérieur du quadrillage
         if self.start_x <= x < self.start_x + 2 * self.cote_case * self.taille_plateau and \
         self.start_y <= y < self.start_y + 2 * self.cote_case * self.taille_plateau:
         
             col = int((x - self.start_x) / (2 * self.cote_case))
             row = int((y - self.start_y) / (2 * self.cote_case))
 
-            # Vérifier que la colonne et la ligne sont dans les limites du quadrillage
             if 0 <= col < self.taille_plateau and 0 <= row < self.taille_plateau:
                 taille_boule = 0.7
                 couleur = "blue" if self.joueur_actuel == 1 else "red"
@@ -63,7 +62,7 @@ class GameGUI:
 
 
 if __name__ == "__main__":
-    taille_plateau = 12
+    taille_plateau = 10
     root = tk.Tk()
     root.attributes('-fullscreen', True)
 

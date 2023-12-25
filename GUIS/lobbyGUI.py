@@ -60,7 +60,7 @@ class LobbyGUI:
         self.quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
         volume_slider = ttk.Scale(main_frame, from_=0, to=100, variable=self.volume_var, orient=tk.HORIZONTAL, length=screen_width // 4, command=self.updateVolume, style="TScale")
         volume_slider.grid(row=8, column=0, columnspan=2, pady=(20, 0), padx=(0, 20), sticky='se')
-        new_window_button = ttk.Button(main_frame, text="New Window", command=self.openNewWindow)
+        new_window_button = ttk.Button(main_frame, text="Start Game", command=self.openNewWindow)
         new_window_button.grid(row=9, column=0, columnspan=2, pady=(20, 0))
 
     def updateSizeSliderLabel(self, event=None):
