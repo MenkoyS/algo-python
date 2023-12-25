@@ -10,3 +10,8 @@ Avant de lancer le script, si tous les modules ne sont pas installés, voici com
         pip install os 
         pip install ttkthemes
         pip install pygame
+
+Si le script présente toujours une ou des erreurs, veuillez contacter les créateurs du Jeu par une de ces adresses mail : 
+
+yann.hobbe@supinfo.com
+raphael.witz@supinfo.com

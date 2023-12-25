@@ -1,11 +1,9 @@
-# GUI.py
-
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
 from pygame import mixer
 import os
-from GUIS.gameGUI import GameGUI
+from gameGUI import GameGUI
 
 class LobbyGUI:
     def __init__(self):
@@ -13,12 +11,15 @@ class LobbyGUI:
         self.root.title("Game GUI")
         self.fullscreen_var = tk.BooleanVar(value=True)
         self.root.attributes('-fullscreen', self.fullscreen_var.get())
+
         mixer.init()
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        music_file_path = os.path.join(script_dir, "assets", "sounds", "AmbientGuitarLobby.mp3")
+        relative_path = os.path.join("..", "assets", "sounds", "AmbientGuitarLobby.mp3")
+        music_file_path = os.path.join(script_dir, relative_path)
         mixer.music.load(music_file_path)
         mixer.music.set_volume(0.5)
         mixer.music.play(-1)
+
         self.size_var = tk.DoubleVar(value=10)
         self.pawn_var = tk.DoubleVar(value=5)
         self.volume_var = tk.DoubleVar(value=50)
