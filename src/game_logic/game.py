@@ -1,4 +1,4 @@
-from resources.pawn import Pawn
+from pawn import Pawn
 from random import randint
 
 class Game:
