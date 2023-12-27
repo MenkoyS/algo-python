@@ -78,7 +78,7 @@ class LobbyGUI:
     def initialize_window(self):
         self.root = ThemedTk(theme="black")
         self.root.title("Game Lobby")
-        self.root.geometry("1067x600")
+        self.root.geometry(f"{self.root.winfo_screenwidth}x{self.root.winfo_screenheight}")
         self.root.resizable(False, False)
         self.root.attributes('-fullscreen', True)
 
@@ -122,9 +122,7 @@ class LobbyGUI:
         if self.root.attributes('-fullscreen'):
             self.root.attributes('-fullscreen', False)
             self.quit_button["text"] = "Go fullscreen"
-            x = (self.root.winfo_screenwidth() - self.root.winfo_width()) // 2
-            y = (self.root.winfo_screenheight() - self.root.winfo_height()) // 2
-            self.root.geometry(f"{self.root.winfo_width()}x{self.root.winfo_height()}+{x}+{y}")
+            self.root.geometry(f"{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}")
         else:
             self.root.attributes('-fullscreen', True)
             self.quit_button["text"] = "Go windowed"
