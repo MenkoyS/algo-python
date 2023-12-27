@@ -47,45 +47,44 @@ class LobbyGUI:
 
     def create_size_controls(self, frame):
         label_font_size = int(24 * self.root.winfo_width() / 1920)
-        ttk.Label(frame, text="Choose the size of the game board:", anchor='center', font=("TkDefaultFont", label_font_size)).grid(pady=(0, 10), padx=(100, 0))
+        ttk.Label(frame, text="Choose the size of the game board", anchor='center', font=("TkDefaultFont", label_font_size)).grid(columnspan=3, pady=(0, 10))
 
         size_slider = ttk.Scale(frame, from_=8, to=12, variable=self.size_var, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 2, command=self.update_size_slider_label, style="TScale")
-        size_slider.grid(row=1, columnspan=2, pady=(20, 0))
+        size_slider.grid(row=1, columnspan=2, pady=(20, 10))
 
         self.create_position_canvases(frame, [8, 9, 10, 11, 12], [0.5, 12.75, 25, 37.2, 49.5], 85, 'center', self.size_canvases)
         self.size_label = ttk.Label(frame, text=f"Size: {int(self.size_var.get())}x{int(self.size_var.get())}", anchor='center', font=("TkDefaultFont", label_font_size))
-        self.size_label.grid(row=3, column=0, columnspan=2, pady=(20, 0))
+        self.size_label.grid(row=3, column=0, columnspan=2, pady=(40, 40))
 
     def create_pawn_controls(self, frame):
         label_font_size = int(24 * self.root.winfo_width() / 1920)
-        ttk.Label(frame, text="Choose pawn:", anchor='center', font=("TkDefaultFont", label_font_size)).grid(row=4, column=0, pady=(10, 10), padx=(100, 0))
-
+        ttk.Label(frame, text="Choose pawn", anchor='center', font=("TkDefaultFont", label_font_size)).grid(row=4, column=0, columnspan=3, pady=(10, 10))
         pawn_slider = ttk.Scale(frame, from_=4, to=6, variable=self.pawn_var, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.update_pawn_slider_label, style="TScale")
-        pawn_slider.grid(row=5, column=0, columnspan=2, pady=(0, 10))
+        pawn_slider.grid(row=5, column=0, columnspan=2, pady=(20, 10))
 
-        self.create_position_canvases(frame, [4, 5, 6], [13, 25, 37], 200, 'center', self.pawn_canvases)
+        self.create_position_canvases(frame, [4, 5, 6], [13, 25, 37], 290, 'center', self.pawn_canvases)
         self.pawn_label = ttk.Label(frame, text=f"Chosen Pawn: {int(self.pawn_var.get())}", anchor='center', font=("TkDefaultFont", label_font_size))
-        self.pawn_label.grid(row=6, column=0, columnspan=2, pady=(20, 0))
+        self.pawn_label.grid(row=6, column=0, columnspan=2, pady=(40, 40))
 
     def create_quit_button(self, frame):
         quit_button_text = "Go windowed"
         self.quit_button = ttk.Button(frame, text=quit_button_text, command=self.toggle_fullscreen)
         self.quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
+        
+    def create_start_game_button(self, frame):
+        new_window_button = ttk.Button(frame, text="Start Game", command=self.open_new_window)
+        new_window_button.grid(row=8, column=0, columnspan=2, pady=(20, 0))
 
     def create_volume_control(self, frame):
         volume_slider = ttk.Scale(frame, from_=0, to=100, variable=self.volume_var, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.update_volume, style="TScale")
-        volume_slider.grid(row=8, column=0, columnspan=2, pady=(20, 0), padx=(0, 20), sticky='se')
-
-    def create_start_game_button(self, frame):
-        new_window_button = ttk.Button(frame, text="Start Game", command=self.open_new_window)
-        new_window_button.grid(row=9, column=0, columnspan=2, pady=(20, 0))
+        volume_slider.grid(row=9, column=0, columnspan=2, pady=(20, 0), padx=(0, 20), sticky='se')
 
     def create_position_canvases(self, frame, values, positions, y_position, anchor, canvases):
         screen_width = self.root.winfo_screenwidth()
         for i, value in enumerate(values):
             if i < len(positions):
                 x_position = (positions[i] / 100) * screen_width
-                canvas = tk.Canvas(frame, width=1, height=10, bg="black", highlightthickness=0)
+                canvas = tk.Canvas(frame, width=1, height=15, bg="black", highlightthickness=0)
                 canvas.place(x=x_position, y=y_position, anchor=anchor)
                 canvases.append(canvas)
 
