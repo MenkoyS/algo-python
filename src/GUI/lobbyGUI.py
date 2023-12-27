@@ -11,7 +11,7 @@ class WelcomeTextAnimator:
 
         self.text = "Welcome !"
         self.x_position = root.winfo_screenwidth() // 2
-        self.speed = 100  # ~~~> temps
+        self.speed = 100
 
         self.text_already_written = ""
         self.text_to_write = self.text
@@ -63,8 +63,8 @@ class LobbyGUI:
 
         # Buttons
         quit_button_text = "Go windowed"
-        quit_button = ttk.Button(main_frame, text=quit_button_text, command=self.toggle_fullscreen)
-        quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
+        self.quit_button = ttk.Button(main_frame, text=quit_button_text, command=self.toggle_fullscreen)
+        self.quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
         new_window_button = ttk.Button(main_frame, text="Start Game", command=self.open_new_window)
         new_window_button.grid(row=8, column=0, columnspan=2, pady=(20, 0))
 
@@ -128,8 +128,6 @@ class LobbyGUI:
         else:
             self.root.attributes('-fullscreen', True)
             self.quit_button["text"] = "Go windowed"
-
-
 
     def open_new_window(self):
         self.root.destroy()
