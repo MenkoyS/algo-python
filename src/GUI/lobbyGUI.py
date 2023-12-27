@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, font
 from pygame import mixer
 from ttkthemes import ThemedTk
 from gameGUI import GameGUI
@@ -62,15 +62,18 @@ class LobbyGUI:
         self.pawn_label.grid(row=6, column=0, columnspan=2, pady=(40, 40))
 
         # Buttons
-        quit_button_text = "Go windowed"
-        self.quit_button = ttk.Button(main_frame, text=quit_button_text, command=self.toggle_fullscreen)
-        self.quit_button.grid(row=7, column=0, columnspan=2, pady=(10, 10))
+        switch_button_text = "Go windowed"
+        self.switch_button = ttk.Button(main_frame, text=switch_button_text, command=self.toggle_fullscreen)
+        self.switch_button.grid(row=9, column=1, columnspan=2, pady=(10, 10))
         new_window_button = ttk.Button(main_frame, text="Start Game", command=self.open_new_window)
         new_window_button.grid(row=8, column=0, columnspan=2, pady=(20, 0))
+        
+        quit_button = ttk.Button(main_frame, text="Quit", command=self.root.destroy)
+        quit_button.grid(row=9, column=0, columnspan=2, pady=(10, 10))
 
         # Volume control
         volume_slider = ttk.Scale(main_frame, from_=0, to=100, variable=self.volume_var, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.update_volume, style="TScale")
-        volume_slider.grid(row=9, column=0, columnspan=2, pady=(20, 0), padx=(0, 20), sticky='se')
+        volume_slider.grid(row=9, column=0, columnspan=2, pady=(100, 0), sticky='se')
 
         # Start the text animation
         self.welcome_text_animator.animate_text()
@@ -121,11 +124,11 @@ class LobbyGUI:
     def toggle_fullscreen(self):
         if self.root.attributes('-fullscreen'):
             self.root.attributes('-fullscreen', False)
-            self.quit_button["text"] = "Go fullscreen"
+            self.switch_button["text"] = "Go fullscreen"
             self.root.geometry(f"{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}")
         else:
             self.root.attributes('-fullscreen', True)
-            self.quit_button["text"] = "Go windowed"
+            self.switch_button["text"] = "Go windowed"
 
     def open_new_window(self):
         self.root.destroy()
