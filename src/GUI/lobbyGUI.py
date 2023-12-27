@@ -78,7 +78,7 @@ class LobbyGUI:
     def initialize_window(self):
         self.root = ThemedTk(theme="black")
         self.root.title("Game Lobby")
-        self.root.geometry(f"{self.root.winfo_screenwidth}x{self.root.winfo_screenheight}")
+        self.root.geometry(f"{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}")
         self.root.resizable(False, False)
         self.root.attributes('-fullscreen', True)
 
