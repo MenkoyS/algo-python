@@ -253,6 +253,7 @@ class GameGUI:
 
             # Update the board GUI
             self.labels[row][col].config(state=tk.DISABLED)
+            self.labels[row][col].unbind("<Button-1>")
             self.update_board()
             self.round += 1
 
@@ -264,6 +265,7 @@ class GameGUI:
 
             # Update the board GUI
             self.labels[row][col].config(state=tk.DISABLED)
+            self.labels[row][col].unbind("<Button-1>")
             self.update_board()
             self.round += 1
 
@@ -271,8 +273,8 @@ class GameGUI:
             # Handle players' moves
             if (col, row) in self.game.possibleCell(self.playerToPlay):
                 self.game.movePawn(self.playerToPlay, (col, row))
-                self.labels[row][col].config(
-                    state=tk.DISABLED)  # Deactivate label
+                self.labels[row][col].config(state=tk.DISABLED)  # Deactivate label
+                self.labels[row][col].unbind("<Button-1>")
                 self.update_board()
                 self.round += 1
 
