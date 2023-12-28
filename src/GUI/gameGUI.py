@@ -23,6 +23,8 @@ class GameGUI:
         self.labelJoueur = tk.Label(self.root, text="Tour du Joueur 1", font=("Helvetica", 16), fg="white", bg="black")
         self.labelJoueur.pack(side=tk.BOTTOM, pady=(10, 10))
 
+        self.etatCases = [[False] * taillePlateau for _ in range(taillePlateau)] # etat false
+
         self.dessinerQuadrillage()
 
         self.canevas.bind("<Button-1>", self.selectionnerCase)
@@ -55,16 +57,19 @@ class GameGUI:
             row = int((y - self.startY) / (2 * self.coteCase))
 
             if 0 <= col < self.taillePlateau and 0 <= row < self.taillePlateau:
-                tailleBoule = 0.7
-                couleur = "blue" if self.joueurActuel == 1 else "red"
-                self.canevas.create_oval(self.startX + col * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
-                                         self.startY + row * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
-                                         self.startX + (col + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
-                                         self.startY + (row + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
-                                         fill=couleur, outline="white")
+                if not self.etatCases[row][col]:
+                    tailleBoule = 0.7
+                    couleur = "blue" if self.joueurActuel == 1 else "red"
+                    self.canevas.create_oval(self.startX + col * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
+                                             self.startY + row * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
+                                             self.startX + (col + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
+                                             self.startY + (row + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
+                                             fill=couleur, outline="white")
 
-                self.joueurActuel = 3 - self.joueurActuel
-                self.labelJoueur.config(text=f"Tour du Joueur {self.joueurActuel}")
+                    self.etatCases[row][col] = True
+                    self.canevas.itemconfig(self.canevas.find_closest(x, y), state=tk.DISABLED)
+                    self.joueurActuel = 3 - self.joueurActuel
+                    self.labelJoueur.config(text=f"Tour du Joueur {self.joueurActuel}")
 
     def initializeAudio(self):
         mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
