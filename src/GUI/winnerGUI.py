@@ -24,7 +24,7 @@ videoWidth, videoHeight = video.get_meta_data()['size']
 videoCanvas = Canvas(window, width=videoWidth, height=videoHeight)
 videoCanvas.place(relwidth=1, relheight=1)
 
-winner_text = Label(window, text="Il a gagné", font=("Helvetica", 30), fg="white", bg="transparent", padx=200)
+winner_text = Label(window, text="Il a gagné", font=("Helvetica", 30), fg="white", bg="black", padx=200)
 winner_text.place(relx=0, rely=0.5, anchor='w')
 
 def updateVideoFrame(frame):
