@@ -251,7 +251,7 @@ class GameGUI:
         for row in range(self.game.rows):
             for col in range(self.game.columns):
                 cell_value = self.game.getCell(row, col)
-                text = "B" if cell_value == 1 else "R" if cell_value == 2 else "1" if cell_value == self.game.player1 else "2" if cell_value == self.game.player2 else "⬜"
+                text = "B" if cell_value == 1 else "R" if cell_value == 2 else "1" if cell_value == self.game.player1 else "2" if cell_value == self.game.player2 else ""
                 self.labels[row][col].config(text=text)
 
     def run(self):
