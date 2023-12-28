@@ -131,7 +131,7 @@ class LobbyGUI:
         mixer.music.stop()
         newRoot = tk.Tk()
         newRoot.attributes('-fullscreen', True)
-        newWindow = GameGUI(root=newRoot, taillePlateau=int(self.sizeVar.get()), size=int(self.sizeVar.get()))
+        newWindow = GameGUI(root=newRoot, taillePlateau=int(self.sizeVar.get()))
         newWindow.run()
 
     def run(self):

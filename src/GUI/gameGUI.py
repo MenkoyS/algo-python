@@ -2,7 +2,7 @@ import tkinter as tk
 from pygame import mixer
 
 class GameGUI:
-    def __init__(self, root, taillePlateau, size, fullscreen=False):
+    def __init__(self, root, taillePlateau, fullscreen=False):
         self.root = root
         self.root.title("Jeu de Grille")
         
