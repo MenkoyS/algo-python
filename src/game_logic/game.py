@@ -19,6 +19,43 @@ class Game:
         self.player2 = Pawn(2)
         self.board = [[0 for _ in range(self.columns)]
                       for _ in range(self.rows)]
+        
+    def getRows(self) -> int:
+        """
+        Get the number of rows on the game board.
+        :return: int, The number of rows.
+        """
+        return self.rows
+
+    def getColumns(self) -> int:
+        """
+        Get the number of columns on the game board.
+        :return: int, The number of columns.
+        """
+        return self.columns
+
+    def getCell(self, row, column):
+        """
+        Get the value of a cell on the game board.
+        :param row: int, The row index of the cell.
+        :param column: int, The column index of the cell.
+        :return: int, The value of the cell.
+        """
+        return self.board[row][column]
+
+    def getPlayer1(self) -> object:
+        """
+        Get the player 1 object.
+        :return: object<Pawn>, The player 1 object.
+        """
+        return self.player1
+
+    def getPlayer2(self) -> object:
+        """
+        Get the player 2 object.
+        :return: object<Pawn>, The player 2 object.
+        """
+        return self.player2
 
     def setRows(self, numberRows) -> None:
         """
@@ -33,15 +70,6 @@ class Game:
         :param numberColumns: 8 <= int <= 12, The new number of columns.
         """
         self.columns = numberColumns
-
-    def getCell(self, row, column):
-        """
-        Get the value of a cell on the game board.
-        :param row: int, The row index of the cell.
-        :param column: int, The column index of the cell.
-        :return: int, The value of the cell.
-        """
-        return self.board[row][column]
 
     def setCell(self, row, column, value) -> None:
         """
@@ -190,50 +218,61 @@ class Game:
         except FileNotFoundError:
             print("Save file not found. Starting a new game.")
 
+
 class GameGUI:
     def __init__(self, game):
         self.game = game
         self.window = tk.Tk()
         self.window.title("GameGUI")
+        self.round = -1
+        self.playerToPlay = self.game.getPlayer1
 
         # Create a 2D list to store references to the labels
-        self.labels = [[None for _ in range(self.game.columns)] for _ in range(self.game.rows)]
+        self.labels = [[None for _ in range(self.game.getColumns())] for _ in range(self.game.getRows())]
 
         # Create the game board labels
-        for row in range(self.game.rows):
-            for col in range(self.game.columns):
-                label = tk.Label(self.window, text="", width=5, height=2, relief=tk.RIDGE, borderwidth=1, bg="black", fg="white")
+        for row in range(self.game.getRows()):
+            for col in range(self.game.getColumns):
+                label = tk.Label(self.window, text="", width=5, height=2,
+                                 relief=tk.RIDGE, borderwidth=1, bg="black", fg="white")
                 label.grid(row=row, column=col)
-                label.bind("<Button-1>", lambda event, r=row, c=col: self.on_label_click(r, c))
+                label.bind("<Button-1>", lambda event, r=row,
+                           c=col: self.on_label_click(r, c))
                 self.labels[row][col] = label
-        self.update_board()
 
-        self.round = -1
-        self.playerToPlay = self.game.player1
+        # Update the board after creating clickable labels
+        self.update_board()
 
     def on_label_click(self, row, col):
         # Handle clicks based on the game state
         if self.round == -1:
             # Place player 1 pawn
-            self.game.player1.setCoordX(col)
-            self.game.player1.setCoordY(row)
-            self.game.board[row][col] = self.game.player1
+            self.game.getPlayer1().setCoordX(col)
+            self.game.getPlayer1().setCoordY(row)
+            self.game.setCell(row, col, self.game.getPlayer1())
+
+            # Update the board GUI
             self.labels[row][col].config(state=tk.DISABLED)
             self.update_board()
             self.round += 1
+
         elif self.round == 0:
             # Place player 2 pawn
-            self.game.player2.setCoordX(col)
-            self.game.player2.setCoordY(row)
-            self.game.board[row][col] = self.game.player2
+            self.game.getPlayer2().setCoordX(col)
+            self.game.getPlayer2().setCoordY(row)
+            self.game.setCell(row, col, self.game.getPlayer2())
+
+            # Update the board GUI
             self.labels[row][col].config(state=tk.DISABLED)
             self.update_board()
             self.round += 1
+
         else:
             # Handle players' moves
             if (col, row) in self.game.possibleCell(self.playerToPlay):
                 self.game.movePawn(self.playerToPlay, (col, row))
-                self.labels[row][col].config(state=tk.DISABLED)  # Deactivate label
+                self.labels[row][col].config(
+                    state=tk.DISABLED)  # Deactivate label
                 self.update_board()
                 self.round += 1
 
@@ -244,7 +283,7 @@ class GameGUI:
                     return winner
 
                 # Inverse player turn
-                self.playerToPlay = self.game.player2 if self.playerToPlay == self.game.player1 else self.game.player1
+                self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
 
     def update_board(self):
         # Update the text on the labels based on the game state
@@ -256,6 +295,7 @@ class GameGUI:
 
     def run(self):
         self.window.mainloop()
+
 
 if __name__ == "__main__":
     game = Game()
