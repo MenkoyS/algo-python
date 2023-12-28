@@ -225,14 +225,14 @@ class GameGUI:
         self.window = tk.Tk()
         self.window.title("GameGUI")
         self.round = -1
-        self.playerToPlay = self.game.getPlayer1
+        self.playerToPlay = self.game.getPlayer1()
 
         # Create a 2D list to store references to the labels
         self.labels = [[None for _ in range(self.game.getColumns())] for _ in range(self.game.getRows())]
 
         # Create the game board labels
         for row in range(self.game.getRows()):
-            for col in range(self.game.getColumns):
+            for col in range(self.game.getColumns()):
                 label = tk.Label(self.window, text="", width=5, height=2,
                                  relief=tk.RIDGE, borderwidth=1, bg="black", fg="white")
                 label.grid(row=row, column=col)
