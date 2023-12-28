@@ -1,71 +1,72 @@
 import tkinter as tk
 from pygame import mixer
 
-
 class GameGUI:
-    def __init__(self, root, taille_plateau):
+    def __init__(self, root, taillePlateau, size, fullscreen=False):
         self.root = root
         self.root.title("Jeu de Grille")
         
-        self.taille_plateau = taille_plateau
-        self.cote_case = 0
-        self.joueur_actuel = 1
+        mixer.init()
+        mixer.music.load('./assets/sounds/AmbientPianoGame.mp3')
+        mixer.music.set_volume(0)
+        mixer.music.play(-1)
+        
+        self.taillePlateau = taillePlateau
+        self.coteCase = 0
+        self.joueurActuel = 1
 
-        self.calculer_taille_case()
+        self.calculerTailleCase()
 
-        self.canevas = tk.Canvas(self.root, bg="black", width=2*self.cote_case*self.taille_plateau, height=2*self.cote_case*self.taille_plateau)
+        self.canevas = tk.Canvas(self.root, bg="black", width=2 * self.coteCase * self.taillePlateau, height=2 * self.coteCase * self.taillePlateau)
         self.canevas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.label_joueur = tk.Label(self.root, text="Tour du Joueur 1", font=("Helvetica", 16), fg="white", bg="black")
-        self.label_joueur.pack(side=tk.BOTTOM, pady=(10,10))
+        self.labelJoueur = tk.Label(self.root, text="Tour du Joueur 1", font=("Helvetica", 16), fg="white", bg="black")
+        self.labelJoueur.pack(side=tk.BOTTOM, pady=(10, 10))
 
-        self.dessiner_quadrillage()
+        self.dessinerQuadrillage()
 
-        self.canevas.bind("<Button-1>", self.selectionner_case)
+        self.canevas.bind("<Button-1>", self.selectionnerCase)
+        
+        if fullscreen:
+            self.root.attributes('-fullscreen', True)
 
-    def calculer_taille_case(self):
-        self.cote_case = min(self.root.winfo_screenwidth(), self.root.winfo_screenheight() - 100) / (2 * self.taille_plateau)
+    def calculerTailleCase(self):
+        self.coteCase = min(self.root.winfo_screenwidth(), self.root.winfo_screenheight() - 100) / (2 * self.taillePlateau)
 
-    def dessiner_quadrillage(self):
-        self.start_x = (self.root.winfo_screenwidth() - 2 * self.cote_case * self.taille_plateau) / 2
-        self.start_y = (self.root.winfo_screenheight() - 2 * self.cote_case * self.taille_plateau) / 4
+    def dessinerQuadrillage(self):
+        self.startX = (self.root.winfo_screenwidth() - 2 * self.coteCase * self.taillePlateau) / 2
+        self.startY = (self.root.winfo_screenheight() - 2 * self.coteCase * self.taillePlateau) / 4
 
-        for i in range(self.taille_plateau + 1):
-            x = self.start_x + i * 2 * self.cote_case
-            self.canevas.create_line(x, self.start_y, x, 2 * self.cote_case * self.taille_plateau + self.start_y, fill="white")
+        for i in range(self.taillePlateau + 1):
+            x = self.startX + i * 2 * self.coteCase
+            self.canevas.create_line(x, self.startY, x, 2 * self.coteCase * self.taillePlateau + self.startY, fill="white")
 
-        for i in range(self.taille_plateau + 1):
-            y = self.start_y + i * 2 * self.cote_case
-            self.canevas.create_line(self.start_x, y, 2 * self.cote_case * self.taille_plateau + self.start_x, y, fill="white")
+        for i in range(self.taillePlateau + 1):
+            y = self.startY + i * 2 * self.coteCase
+            self.canevas.create_line(self.startX, y, 2 * self.coteCase * self.taillePlateau + self.startX, y, fill="white")
 
-    def selectionner_case(self, event):
+    def selectionnerCase(self, event):
         x = event.x
         y = event.y
 
-        if self.start_x <= x < self.start_x + 2 * self.cote_case * self.taille_plateau and \
-        self.start_y <= y < self.start_y + 2 * self.cote_case * self.taille_plateau:
-        
-            col = int((x - self.start_x) / (2 * self.cote_case))
-            row = int((y - self.start_y) / (2 * self.cote_case))
+        if self.startX <= x < self.startX + 2 * self.coteCase * self.taillePlateau and \
+                self.startY <= y < self.startY + 2 * self.coteCase * self.taillePlateau:
+            col = int((x - self.startX) / (2 * self.coteCase))
+            row = int((y - self.startY) / (2 * self.coteCase))
 
-            if 0 <= col < self.taille_plateau and 0 <= row < self.taille_plateau:
-                taille_boule = 0.7
-                couleur = "blue" if self.joueur_actuel == 1 else "red"
-                self.canevas.create_oval(self.start_x + col * 2 * self.cote_case + (1-taille_boule)*self.cote_case,
-                                        self.start_y + row * 2 * self.cote_case + (1-taille_boule)*self.cote_case,
-                                        self.start_x + (col + 1) * 2 * self.cote_case - (1-taille_boule)*self.cote_case,
-                                        self.start_y + (row + 1) * 2 * self.cote_case - (1-taille_boule)*self.cote_case,
-                                        fill=couleur, outline="white")
+            if 0 <= col < self.taillePlateau and 0 <= row < self.taillePlateau:
+                tailleBoule = 0.7
+                couleur = "blue" if self.joueurActuel == 1 else "red"
+                self.canevas.create_oval(self.startX + col * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
+                                         self.startY + row * 2 * self.coteCase + (1 - tailleBoule) * self.coteCase,
+                                         self.startX + (col + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
+                                         self.startY + (row + 1) * 2 * self.coteCase - (1 - tailleBoule) * self.coteCase,
+                                         fill=couleur, outline="white")
 
-                self.joueur_actuel = 3 - self.joueur_actuel
-                self.label_joueur.config(text=f"Tour du Joueur {self.joueur_actuel}")
+                self.joueurActuel = 3 - self.joueurActuel
+                self.labelJoueur.config(text=f"Tour du Joueur {self.joueurActuel}")
 
-
-if __name__ == "__main__":
-    taille_plateau = 10
-    root = tk.Tk()
-    root.attributes('-fullscreen', True)
-
-    jeu = GameGUI(root, taille_plateau)
-
-    root.mainloop()
+    def initializeAudio(self):
+        mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
+        mixer.music.set_volume(0)
+        mixer.music.play(-1)

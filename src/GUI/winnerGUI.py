@@ -1,38 +1,50 @@
 import os
 import tkinter as tk
-from tkinter import Canvas
+from tkinter import Canvas, Label
 from PIL import Image, ImageTk
 import imageio
+from pygame import mixer
 
-nom_video = 'poulet.mp4'
-chemin_rel = os.path.join(os.getcwd(), 'assets', 'images', nom_video)
+videoName = 'poulet.mp4'
+relativePath = os.path.join(os.getcwd(), 'assets', 'images', videoName)
 
-fenetre = tk.Tk()
-fenetre.title("Fenêtre avec Vidéo")
-fenetre.attributes('-fullscreen', True)
+window = tk.Tk()
+window.title("Window with Video")
+window.attributes('-fullscreen', True)
 
-video = imageio.get_reader(chemin_rel)
-video_width, video_height = video.get_meta_data()['size']
+mixer.init()
 
-fenetre_video = Canvas(fenetre, width=video_width, height=video_height)
-fenetre_video.place(relwidth=1, relheight=1)
+musicPath = './assets/sounds/VictorySound.mp3'
+mixer.music.load(musicPath)
+mixer.music.set_volume(0)
 
-def update_video_frame(frame):
+video = imageio.get_reader(relativePath)
+videoWidth, videoHeight = video.get_meta_data()['size']
+
+videoCanvas = Canvas(window, width=videoWidth, height=videoHeight)
+videoCanvas.place(relwidth=1, relheight=1)
+
+winner_text = Label(window, text="Il a gagné", font=("Helvetica", 30), fg="white", bg="transparent", padx=200)
+winner_text.place(relx=0, rely=0.5, anchor='w')
+
+def updateVideoFrame(frame):
     image = Image.fromarray(frame)
     photo = ImageTk.PhotoImage(image=image)
-    fenetre_video.create_image(0, 0, anchor=tk.NW, image=photo)
-    fenetre_video.image = photo
+    videoCanvas.create_image(0, 0, anchor=tk.NW, image=photo)
+    videoCanvas.image = photo
 
-def quitter_fenetre(event):
-    fenetre.destroy()
+def quitWindow(event):
+    window.destroy()
 
-fenetre.bind('<Escape>', quitter_fenetre)
+window.bind('<Escape>', quitWindow)
 
-def lire_video():
+def playVideo():
+    mixer.music.play(0)
+
     for frame in video:
-        update_video_frame(frame)
-        fenetre.update()
+        updateVideoFrame(frame)
+        window.update()
 
-lire_video()
+playVideo()
 
-fenetre.mainloop()
+window.mainloop()
