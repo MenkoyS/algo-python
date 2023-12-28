@@ -1,6 +1,7 @@
 from pawn import Pawn
 from random import randint
 
+
 class Game:
     """
     Initialize the game board class.
@@ -16,7 +17,8 @@ class Game:
 
         self.player1 = Pawn(1)
         self.player2 = Pawn(2)
-        self.board = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
+        self.board = [[0 for _ in range(self.columns)]
+                      for _ in range(self.rows)]
 
     def setRows(self, numberRows) -> None:
         """
@@ -59,7 +61,7 @@ class Game:
         pawnX, pawnY = pawn.getCoordX(), pawn.getCoordY()
         return [(pawnX+x, pawnY+y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
                 if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows]
-    
+
     def movePawn(self, pawn, destination) -> None:
         """
         Move a pawn from the origin to the destination on the game board.
@@ -107,7 +109,7 @@ class Game:
         """
         x, y = coordinates
         linesToCheck = []
-        
+
         # Check what lines we need to check (horizontal or vertical or both)
         if x + nbAligned - 1 < self.columns:
             linesToCheck.append((1, 0))
@@ -122,7 +124,6 @@ class Game:
                 if k+1 == nbAligned:
                     return True
         return False
-
 
     def checkWin(self, player, nbAligned) -> bool:
         """
@@ -141,8 +142,51 @@ class Game:
             for xCoord in range(self.columns):
                 if self.checkLines(player, nbAligned, (xCoord, yCoord)) or self.checkDiagonals(player, nbAligned, (xCoord, yCoord)):
                     return True
-                
+
         return False
+
+    def saveGame(self, filename="save.txt") -> None:
+        """
+        Save the current state of the game to a file.
+        :param filename: str, The name of the file to save the game to.
+        """
+        with open(f"./src/game_save/{filename}", 'w') as file:
+            file.write(f"{self.rows}\n")
+            file.write(f"{self.columns}\n")
+            file.write(f"{self.pawnsToAlign}\n")
+
+            file.write(
+                f"{self.player1.getCoordX()} {self.player1.getCoordY()}\n")
+            file.write(
+                f"{self.player2.getCoordX()} {self.player2.getCoordY()}\n")
+
+            for row in self.board:
+                file.write(" ".join(map(str, row)) + "\n")
+
+    def loadGame(self, filename="save_game.txt") -> None:
+        """
+        Load the game state from a file.
+        :param filename: str, The name of the file to load the game from.
+        """
+        try:
+            with open(f"./src/game_save/{filename}", 'r') as file:
+                self.rows = int(file.readline())
+                self.columns = int(file.readline())
+                self.pawnsToAlign = int(file.readline())
+
+                player1_coords = tuple(map(int, file.readline().split()))
+                player2_coords = tuple(map(int, file.readline().split()))
+
+                self.player1.setCoordX(player1_coords[0])
+                self.player1.setCoordY(player1_coords[1])
+
+                self.player2.setCoordX(player2_coords[0])
+                self.player2.setCoordY(player2_coords[1])
+
+                self.board = [list(map(int, line.split())) for line in file]
+
+        except FileNotFoundError:
+            print("Save file not found. Starting a new game.")
 
     def gameLoop(self) -> None:
         """
@@ -154,11 +198,15 @@ class Game:
         playerToPlay = self.player1
 
         # Replace getting coords by clicking in GUI
-        player1xCoord = int(input("Choose x coordinate to place your pawn : ")) # Horizontal
-        player1yCoord = int(input("Choose y coordinate to place your pawn : ")) # Vertical
-        
-        player2xCoord = int(input("Choose x coordinate to place your pawn : ")) # Horizontal
-        player2yCoord = int(input("Choose y coordinate to place your pawn : ")) # Vertical
+        player1xCoord = int(
+            input("Choose x coordinate to place your pawn : "))  # Horizontal
+        player1yCoord = int(
+            input("Choose y coordinate to place your pawn : "))  # Vertical
+
+        player2xCoord = int(
+            input("Choose x coordinate to place your pawn : "))  # Horizontal
+        player2yCoord = int(
+            input("Choose y coordinate to place your pawn : "))  # Vertical
 
         # Setting players to their chosen coordinates
         self.player1.setCoordX(player1xCoord)
@@ -171,13 +219,15 @@ class Game:
         self.board[player2yCoord][player2xCoord] = self.player2
 
         while not hasPlayerWon:
-            
+
             # Player choose where to move
             xMove, yMove = -1, -1
             while not (xMove, yMove) in self.possibleCell(playerToPlay):
                 # Replace by click on case in GUI
-                xMove = int(input("Choose x coordinate to move your pawn : ")) # Horizontal
-                yMove = int(input("Choose  coordinate to move your pawn : ")) # Vertical
+                # Horizontal
+                xMove = int(input("Choose x coordinate to move your pawn : "))
+                # Vertical
+                yMove = int(input("Choose  coordinate to move your pawn : "))
 
             # We move the player to its chosen move
             self.movePawn(playerToPlay, (xMove, yMove))
