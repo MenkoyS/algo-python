@@ -1,5 +1,5 @@
 from pawn import Pawn
-from random import randint
+import tkinter as tk
 
 
 class Game:
@@ -70,6 +70,8 @@ class Game:
         """
         originX, originY = pawn.getCoordX(), pawn.getCoordY()
         destinationX, destinationY = destination
+        pawn.setCoordX(destinationX)
+        pawn.setCoordY(destinationY)
         self.board[destinationY][destinationX] = pawn
         self.board[originY][originX] = pawn.getPlayer()
 
@@ -188,54 +190,76 @@ class Game:
         except FileNotFoundError:
             print("Save file not found. Starting a new game.")
 
-    def gameLoop(self) -> None:
-        """
-        Main game loop to handle game logic.
-        This method implements the main loop of the game, allowing players to make moves and checks for a win condition in each round.
-        """
-        hasPlayerWon = False
-        round = 1
-        playerToPlay = self.player1
+class GameGUI:
+    def __init__(self, game):
+        self.game = game
+        self.window = tk.Tk()
+        self.window.title("GameGUI")
 
-        # Replace getting coords by clicking in GUI
-        player1xCoord = int(
-            input("Choose x coordinate to place your pawn : "))  # Horizontal
-        player1yCoord = int(
-            input("Choose y coordinate to place your pawn : "))  # Vertical
+        # Create a 2D list to store references to the buttons
+        self.buttons = [[None for _ in range(self.game.columns)] for _ in range(self.game.rows)]
 
-        player2xCoord = int(
-            input("Choose x coordinate to place your pawn : "))  # Horizontal
-        player2yCoord = int(
-            input("Choose y coordinate to place your pawn : "))  # Vertical
+        # Create the game board buttons
+        for row in range(self.game.rows):
+            for col in range(self.game.columns):
+                button = tk.Button(self.window, text="", width=5, height=2,
+                                   command=lambda r=row, c=col: self.on_button_click(r, c))
+                button.grid(row=row, column=col)
+                self.buttons[row][col] = button
 
-        # Setting players to their chosen coordinates
-        self.player1.setCoordX(player1xCoord)
-        self.player1.setCoordY(player1yCoord)
+        self.round = -1
+        self.playerToPlay = self.game.player1
 
-        self.player2.setCoordX(player2xCoord)
-        self.player2.setCoordY(player2yCoord)
+    def on_button_click(self, row, col):
+        
+        # Place player 1 pawn
+        if self.round == -1:
+            self.game.player1.setCoordX(col)
+            self.game.player1.setCoordY(row)
+            self.game.board[row][col] = self.game.player1
+            self.buttons[row][col].config(state=tk.DISABLED)
+            self.update_board()
+            self.round += 1
 
-        self.board[player1yCoord][player1xCoord] = self.player1
-        self.board[player2yCoord][player2xCoord] = self.player2
+        # Place player 2 pawn
+        elif self.round == 0:
+            self.game.player2.setCoordX(col)
+            self.game.player2.setCoordY(row)
+            self.game.board[row][col] = self.game.player2
+            self.buttons[row][col].config(state=tk.DISABLED)
+            self.update_board()
+            self.round += 1
 
-        while not hasPlayerWon:
+        # Handle players moves
+        else:
+            if (col, row) in self.game.possibleCell(self.playerToPlay):
+                self.game.movePawn(self.playerToPlay, (col, row))
+                self.buttons[row][col].config(state=tk.DISABLED) # Deactivate button
+                self.update_board()
+                self.round += 1
 
-            # Player choose where to move
-            xMove, yMove = -1, -1
-            while not (xMove, yMove) in self.possibleCell(playerToPlay):
-                # Replace by click on case in GUI
-                # Horizontal
-                xMove = int(input("Choose x coordinate to move your pawn : "))
-                # Vertical
-                yMove = int(input("Choose  coordinate to move your pawn : "))
+                # If the player has one
+                if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
+                    winner = self.playerToPlay.getPlayer()
+                    print(f"Player {winner} won !")
+                    return winner
+                
+                # Inverse player turn
+                self.playerToPlay = self.game.player2 if self.playerToPlay == self.game.player1 else self.game.player1
+        
+    def update_board(self):
+        # Update the text on the buttons based on the game state
+        for row in range(self.game.rows):
+            for col in range(self.game.columns):
+                cell_value = self.game.getCell(row, col)
+                text = "B" if cell_value == 1 else "R" if cell_value == 2 else "1" if cell_value == self.game.player1 else "2" if cell_value == self.game.player2 else "⬜"
+                self.buttons[row][col].config(text=text)
 
-            # We move the player to its chosen move
-            self.movePawn(playerToPlay, (xMove, yMove))
+    def run(self):
+        self.window.mainloop()
 
-            # We check if the player has won with this move
-            hasPlayerWon = self.checkWin(playerToPlay, self.pawnsToAlign)
-            if hasPlayerWon:
-                break
 
-            playerToPlay = self.player2 if playerToPlay == self.player1 else self.player1
-            round += 1
+if __name__ == "__main__":
+    game = Game()
+    game_gui = GameGUI(game)
+    game_gui.run()
