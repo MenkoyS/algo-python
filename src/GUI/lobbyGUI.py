@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from pygame import mixer
+
 from ttkthemes import ThemedTk
+from pygame import mixer
+
 from gameGUI import GameGUI
+from game import Game
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
@@ -131,7 +134,8 @@ class LobbyGUI:
         mixer.music.stop()
         newRoot = tk.Tk()
         newRoot.attributes('-fullscreen', True)
-        newWindow = GameGUI(root=newRoot, taillePlateau=int(self.sizeVar.get()))
+        game = Game(rows=self.sizeVar, columns=self.sizeVar, pawnsToAlign=self.pawnVar)
+        newWindow = GameGUI(game)
         newWindow.run()
 
     def run(self):

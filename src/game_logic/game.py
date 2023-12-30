@@ -8,7 +8,7 @@ class Game:
     :param pawnsToAlign: 4 <= int <= 6, The number of pawns needed to win the game.
     """
 
-    def __init__(self, rows=12, columns=12, pawnsToAlign=5) -> None:
+    def __init__(self, rows=10, columns=10, pawnsToAlign=5) -> None:
         self.rows = rows
         self.columns = columns
         self.pawnsToAlign = pawnsToAlign
