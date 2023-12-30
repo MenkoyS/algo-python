@@ -11,7 +11,7 @@ class WelcomeTextAnimator:
 
         self.text = "Welcome !"
         self.xPosition = root.winfo_screenwidth() // 2
-        self.speed = 100
+        self.speed = 300
 
         self.textAlreadyWritten = ""
         self.textToWrite = self.text
