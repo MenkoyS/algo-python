@@ -1,9 +1,14 @@
 import tkinter as tk
-from tkinter import *
 from game import Game
 
 class GameGUI:
     def __init__(self, game):
+        """
+        Initialize the GameGUI.
+
+        Parameters:
+        - game: An instance of the Game class.
+        """
         self.game = game
         self.window = tk.Tk()
         self.window.title("GameGUI")
@@ -52,23 +57,36 @@ class GameGUI:
                            c=col: self.on_label_click(r, c))
                 self.labels[row][col] = label
 
-        # Create buttons in the spacer frame for vertical centering
-        btn_restart = tk.Button(spacer_frame, text="Restart", command=self.restart_game)
-        btn_restart.pack(side=tk.TOP, pady=10)
+        outer_frame = tk.Frame(self.button_frame, bg="#F0F0F0", bd=5, relief=tk.RAISED)  # Light gray background, 5-pixel border, raised relief
+        outer_frame.pack(expand=True, fill=tk.BOTH)
 
-        btn_quit = tk.Button(spacer_frame, text="Quit", command=self.window.destroy)
-        btn_quit.pack(side=tk.TOP, pady=10)
+        # Create buttons in the outer frame for vertical and horizontal centering
+        btn_restart = tk.Button(outer_frame, text="Restart", command=self.restart_game, font=("Arial", 12), bg="#4CAF50", fg="white", padx=10, pady=5, bd=2)  # Green button
+        btn_restart.grid(row=0, pady=10)
 
-        btn_save = tk.Button(spacer_frame, text="Save", command=self.save)
-        btn_save.pack(side=tk.TOP, pady=10)
+        btn_quit = tk.Button(outer_frame, text="Quit", command=self.window.destroy, font=("Arial", 12), bg="#D32F2F", fg="white", padx=10, pady=5, bd=2)  # Red button
+        btn_quit.grid(row=1, pady=10)
 
-        btn_go_window = tk.Button(spacer_frame, text="Go window", command=self.window)
-        btn_go_window.pack(side=tk.TOP, pady=10)
+        btn_save = tk.Button(outer_frame, text="Save", command=self.save, font=("Arial", 12), bg="#1565C0", fg="white", padx=10, pady=5, bd=2)  # Blue button
+        btn_save.grid(row=2, pady=10)
+
+        btn_go_window = tk.Button(outer_frame, text="Go window", command=self.window, font=("Arial", 12), bg="#FFC107", fg="black", padx=10, pady=5, bd=2)  # Yellow button
+        btn_go_window.grid(row=3, pady=10)
+
+        # Center the outer frame within its parent
+        outer_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         # Update the board after creating clickable labels
         self.update_board()
 
     def on_label_click(self, row, col):
+        """
+        Handle clicks on the game board labels.
+
+        Parameters:
+        - row: Row index of the clicked label.
+        - col: Column index of the clicked label.
+        """
         # Handle clicks based on the game state
         if self.round == -1:
             # Place player 1 pawn
@@ -113,22 +131,44 @@ class GameGUI:
                 self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
 
     def update_board(self):
+        """
+        Update the game board GUI based on the current state of the game.
+        """
         for row in range(self.game.getRows()):
             for col in range(self.game.getColumns()):
                 cell_value = self.game.getCell(row, col)
-                text = "R" if cell_value == 1 else "B" if cell_value == 2 else "1" if cell_value == self.game.player1 else "2" if cell_value == self.game.player2 else ""
-                self.labels[row][col].config(text=text)
+                if cell_value == self.game.player1:
+                    self.labels[row][col].config(text="", bg="red")
+                elif cell_value == self.game.player2:
+                    self.labels[row][col].config(text="", bg="blue")
+                else:
+                    self.labels[row][col].config(text="")
 
     def restart_game(self):
+        """
+        Restart the game.
+        """
+        # Implement the logic to restart the game
         pass
 
     def save(self):
+        """
+        Save the current state of the game.
+        """
+        # Implement the logic to save the game state
         pass
-        
+
     def window(self):
+        """
+        Open a new window.
+        """
+        # Implement the logic to open a new window
         pass
 
     def run(self):
+        """
+        Run the main event loop of the GUI.
+        """
         self.window.mainloop()
 
 if __name__ == "__main__":
