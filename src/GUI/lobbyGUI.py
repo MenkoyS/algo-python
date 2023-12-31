@@ -4,7 +4,7 @@ from tkinter import ttk, messagebox
 from ttkthemes import ThemedTk
 from pygame import mixer
 
-from gameGUI import GameGUI
+from game_logic.gameGUI import GameGUI
 from game import Game
 
 class WelcomeTextAnimator:

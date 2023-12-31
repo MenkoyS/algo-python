@@ -1,11 +1,17 @@
 import tkinter as tk
 from tkinter import messagebox
 from sys import exit
+from game import Game
+import pygame
 
 class GameGUI:
     def __init__(self, game) -> None:
         self.game = game
         self.init_window()
+
+        # ~~> pygame mixer for sound ( line 126 )
+        pygame.mixer.init()
+        self.move_sound = pygame.mixer.Sound('assets/sounds/PawnMove.mp3') # ~> line 126
 
         self.round = -1
         self.playerToPlay = self.game.getPlayer1()
@@ -98,6 +104,7 @@ class GameGUI:
             self.canvases[row][col].config(state=tk.DISABLED)
             self.canvases[row][col].unbind("<Button-1>")
             self.update_board()
+            self.play_sound_effect()  # Play the sound effect
             self.round += 1
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
@@ -106,6 +113,14 @@ class GameGUI:
                 self.quit()
 
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
+
+    def play_sound_effect(self) -> None:
+        """
+        Play the sound effect for a pawn move.
+
+        """
+        # Play the sound effect
+        self.move_sound.play()
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
@@ -154,3 +169,7 @@ class GameGUI:
 
     def run(self) -> None:
         self.window.mainloop()
+
+settings = Game(rows=10, columns=10, pawnsToAlign=3)
+app = GameGUI(settings)
+app.run()
