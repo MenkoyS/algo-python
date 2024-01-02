@@ -117,7 +117,6 @@ class GameGUI:
             self.update_board()
             self.play_sound_effect()  # ~~> play the sound effect
             self.round += 1
-            self.play_sound_effect()
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
                 winner = self.playerToPlay.getPlayer()
@@ -125,7 +124,6 @@ class GameGUI:
                 self.window.destroy()
                 exit()
 
-            self.round += 1
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
 
             self.numberCounter()
@@ -136,8 +134,6 @@ class GameGUI:
 
     def play_sound_effect(self) -> None:
         self.move_sound.play() # ~~> play the sound effect
-
-        self.move_sound.play()
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
