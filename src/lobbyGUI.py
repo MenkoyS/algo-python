@@ -1,11 +1,11 @@
+from game import Game
+from gameGUI import GameGUI
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 
 from ttkthemes import ThemedTk
 from pygame import mixer
-
-from game_logic.gameGUI import GameGUI
-from game import Game
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
@@ -61,6 +61,7 @@ class LobbyGUI:
 
         self.switchButton = ttk.Button(mainFrame, text="Go windowed", command=self.toggleFullscreen)
         self.switchButton.grid(row=9, column=1, columnspan=2, pady=(10, 10))
+
         newWindowButton = ttk.Button(mainFrame, text="Start Game", command=self.openNewWindow)
         newWindowButton.grid(row=8, column=0, columnspan=2, pady=(20, 0))
         
@@ -132,9 +133,7 @@ class LobbyGUI:
     def openNewWindow(self):
         self.root.destroy()
         mixer.music.stop()
-        newRoot = tk.Tk()
-        newRoot.attributes('-fullscreen', True)
-        game = Game(rows=self.sizeVar, columns=self.sizeVar, pawnsToAlign=self.pawnVar)
+        game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()))
         newWindow = GameGUI(game)
         newWindow.run()
 

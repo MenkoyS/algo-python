@@ -1,20 +1,25 @@
+from game import Game
+
 import tkinter as tk
 from tkinter import messagebox
 from sys import exit
-from game import Game
-import pygame
+
+from pygame import mixer
 
 class GameGUI:
     def __init__(self, game) -> None:
         self.game = game
+        self.round = 1
+        self.player_placed = 0
+        self.playerToPlay = self.game.getPlayer1()
+
         self.init_window()
 
         # ~~> pygame mixer for sound ( line 126 )
-        pygame.mixer.init()
-        self.move_sound = pygame.mixer.Sound('assets/sounds/PawnMove.mp3') # ~> line 126
+        mixer.init()
+        self.move_sound = mixer.Sound('assets/sounds/PawnMove.mp3') # ~> line 126
 
-        self.round = -1
-        self.playerToPlay = self.game.getPlayer1()
+        
 
     def init_window(self) -> None:
         self.window = tk.Tk()
@@ -83,16 +88,20 @@ class GameGUI:
             button.pack(pady=15, padx=20)
 
     def on_label_click(self, row, col) -> None:
-        if self.round == -1:
+        if self.player_placed == 0:
             self.place_pawn(self.game.getPlayer1(), row, col)
-            self.round += 1
-        elif self.round == 0:
+            self.player_placed += 1
+        elif self.player_placed == 1:
             self.place_pawn(self.game.getPlayer2(), row, col)
-            self.round += 1
+            self.player_placed += 1
         else:
             self.handle_players_moves(row, col)
+<<<<<<< HEAD:src/game_logic/gameGUI.py
         
         self.numberCounter()
+=======
+        self.update_board()
+>>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
     def place_pawn(self, player, row, col) -> None:
         player.setCoordX(col)
@@ -101,22 +110,27 @@ class GameGUI:
 
         self.canvases[row][col].config(state=tk.DISABLED)
         self.canvases[row][col].unbind("<Button-1>")
-        self.update_board()
 
     def handle_players_moves(self, row, col) -> None:
         if (col, row) in self.game.possibleCell(self.playerToPlay):
             self.game.movePawn(self.playerToPlay, (col, row))
             self.canvases[row][col].config(state=tk.DISABLED)
             self.canvases[row][col].unbind("<Button-1>")
+<<<<<<< HEAD:src/game_logic/gameGUI.py
             self.update_board()
             self.play_sound_effect()  # ~~> play the sound effect
             self.round += 1
+=======
+            self.play_sound_effect()
+>>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
                 winner = self.playerToPlay.getPlayer()
                 messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing our game.")
-                self.quit()
+                self.window.destroy()
+                exit()
 
+            self.round += 1
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
 
             self.numberCounter()
@@ -125,8 +139,13 @@ class GameGUI:
         player_turn = "Player 1" if self.round == -1 or self.round % 2 != 0 else "Player 2"
         self.turn_label.config(text="Turn: {}".format(player_turn))
 
+<<<<<<< HEAD:src/game_logic/gameGUI.py
     def play_sound_effect(self) -> None:
         self.move_sound.play() # ~~> play the sound effect
+=======
+        """
+        self.move_sound.play()
+>>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
@@ -147,13 +166,18 @@ class GameGUI:
                 elif cell_value == 2:
                     canvas.create_line(10, 10, cell_size-10, cell_size-10, fill="blue", width=10)
                     canvas.create_line(10, cell_size-10, cell_size-10, 10, fill="blue", width=10)
+                elif self.player_placed == 2 and (col, row) in self.game.possibleCell(self.playerToPlay):
+                    canvas.create_oval(20, 20, cell_size-20, cell_size-20, fill="gray", outline="gray")
 
     def restart_game(self) -> None:
         gameSize = self.game.getColumns()
         pawnsToAlign = self.game.pawnsToAlign
         self.game = Game(rows=gameSize, columns=gameSize, pawnsToAlign=pawnsToAlign)
-        self.round = -1
+        self.round = 1
         self.playerToPlay = self.game.getPlayer1()
+
+        # Resetup the canvases
+        self.canvases = self.create_board_canvases()
         self.update_board()
 
         messagebox.showinfo(title="Restart Successfull", message="Game restarted successfully !", detail="You can now play your new game.")
@@ -175,7 +199,3 @@ class GameGUI:
 
     def run(self) -> None:
         self.window.mainloop()
-
-settings = Game(rows=10, columns=10, pawnsToAlign=3)
-app = GameGUI(settings)
-app.run()
