@@ -34,7 +34,10 @@ class GameGUI:
         self.setup_buttons()
         
         self.turn_label = tk.Label(self.button_frame, text="Turn: Player 1", font=("Arial", 12), bg="black", fg="white")
-        self.turn_label.pack(pady=15, padx=20)
+        self.turn_label.pack()
+
+        self.round_label = tk.Label(self.button_frame, text="Round: 1", font=("Arial", 12), bg="black", fg="white")
+        self.round_label.pack(pady=15)
         
     def setup_fullscreen(self) -> None:
         self.window.attributes('-fullscreen', True)
@@ -96,8 +99,6 @@ class GameGUI:
             self.player_placed += 1
         else:
             self.handle_players_moves(row, col)
-        
-        self.numberCounter()
 
         self.update_board()
 
@@ -116,8 +117,6 @@ class GameGUI:
             self.canvases[row][col].unbind("<Button-1>")
             self.update_board()
             self.play_sound_effect()  # ~~> play the sound effect
-            self.round += 1
-            self.play_sound_effect()
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
                 winner = self.playerToPlay.getPlayer()
@@ -127,12 +126,14 @@ class GameGUI:
 
             self.round += 1
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
-
-            self.numberCounter()
+            self.updatePlayerTurn()
+            self.updateRound()
     
-    def numberCounter(self) -> None:
-        player_turn = "Player 1" if self.round == -1 or self.round % 2 != 0 else "Player 2"
-        self.turn_label.config(text="Turn: {}".format(player_turn))
+    def updatePlayerTurn(self) -> None:
+        self.turn_label.config(text="Turn: Player {}".format(self.playerToPlay.getPlayer()))
+
+    def updateRound(self) -> None:
+        self.round_label.config(text="Round: {}".format(self.round))
 
     def play_sound_effect(self) -> None:
         self.move_sound.play() # ~~> play the sound effect
@@ -165,12 +166,15 @@ class GameGUI:
         gameSize = self.game.getColumns()
         pawnsToAlign = self.game.pawnsToAlign
         self.game = Game(rows=gameSize, columns=gameSize, pawnsToAlign=pawnsToAlign)
+        self.player_placed = 0
         self.round = 1
         self.playerToPlay = self.game.getPlayer1()
 
         # Resetup the canvases
         self.canvases = self.create_board_canvases()
         self.update_board()
+        self.updatePlayerTurn()
+        self.updateRound()
 
         messagebox.showinfo(title="Restart Successfull", message="Game restarted successfully !", detail="You can now play your new game.")
 
