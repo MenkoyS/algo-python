@@ -93,6 +93,7 @@ class GameGUI:
             self.player_placed += 1
         else:
             self.handle_players_moves(row, col)
+        self.update_board()
 
     def place_pawn(self, player, row, col) -> None:
         player.setCoordX(col)
@@ -101,7 +102,6 @@ class GameGUI:
 
         self.canvases[row][col].config(state=tk.DISABLED)
         self.canvases[row][col].unbind("<Button-1>")
-        self.update_board()
 
     def handle_players_moves(self, row, col) -> None:
         if (col, row) in self.game.possibleCell(self.playerToPlay):
@@ -118,7 +118,6 @@ class GameGUI:
 
             self.round += 1
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
-            self.update_board()
 
     def play_sound_effect(self) -> None:
         """
@@ -146,7 +145,7 @@ class GameGUI:
                 elif cell_value == 2:
                     canvas.create_line(10, 10, cell_size-10, cell_size-10, fill="blue", width=10)
                     canvas.create_line(10, cell_size-10, cell_size-10, 10, fill="blue", width=10)
-                elif self.round >= 0 and (col, row) in self.game.possibleCell(self.playerToPlay):
+                elif self.player_placed == 2 and (col, row) in self.game.possibleCell(self.playerToPlay):
                     canvas.create_oval(20, 20, cell_size-20, cell_size-20, fill="gray", outline="gray")
 
     def restart_game(self) -> None:
