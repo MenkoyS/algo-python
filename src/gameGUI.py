@@ -96,12 +96,10 @@ class GameGUI:
             self.player_placed += 1
         else:
             self.handle_players_moves(row, col)
-<<<<<<< HEAD:src/game_logic/gameGUI.py
         
         self.numberCounter()
-=======
+
         self.update_board()
->>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
     def place_pawn(self, player, row, col) -> None:
         player.setCoordX(col)
@@ -116,13 +114,10 @@ class GameGUI:
             self.game.movePawn(self.playerToPlay, (col, row))
             self.canvases[row][col].config(state=tk.DISABLED)
             self.canvases[row][col].unbind("<Button-1>")
-<<<<<<< HEAD:src/game_logic/gameGUI.py
             self.update_board()
             self.play_sound_effect()  # ~~> play the sound effect
             self.round += 1
-=======
             self.play_sound_effect()
->>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
                 winner = self.playerToPlay.getPlayer()
@@ -139,13 +134,10 @@ class GameGUI:
         player_turn = "Player 1" if self.round == -1 or self.round % 2 != 0 else "Player 2"
         self.turn_label.config(text="Turn: {}".format(player_turn))
 
-<<<<<<< HEAD:src/game_logic/gameGUI.py
     def play_sound_effect(self) -> None:
         self.move_sound.play() # ~~> play the sound effect
-=======
-        """
+
         self.move_sound.play()
->>>>>>> 1e15820d791656e178048f4c72441b0da42731fb:src/gameGUI.py
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
