@@ -1,5 +1,5 @@
-from src.game_logic.game import Game
-from src.GUI.lobbyGUI import *
+from game import Game
+from lobbyGUI import *
 
 if __name__ == "__main__":
     game = Game(rows=10, columns=10, pawnsToAlign=5)

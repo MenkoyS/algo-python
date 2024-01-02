@@ -86,7 +86,7 @@ class Game:
         """
         pawnX, pawnY = pawn.getCoordX(), pawn.getCoordY()
         return [(pawnX+x, pawnY+y) for x, y in [(1, 2), (-1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1)]
-                if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows]
+                if 0 <= pawnX+x < self.columns and 0 <= pawnY+y < self.rows and self.getCell(pawnY+y, pawnX+x)==0]
 
     def movePawn(self, pawn, destination) -> None:
         """
