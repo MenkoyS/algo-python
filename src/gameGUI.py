@@ -123,7 +123,7 @@ class GameGUI:
                 messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing our game.")
                 self.window.destroy()
                 exit()
-
+            
             self.round += 1
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
             self.updatePlayerTurn()
@@ -137,8 +137,6 @@ class GameGUI:
 
     def play_sound_effect(self) -> None:
         self.move_sound.play() # ~~> play the sound effect
-
-        self.move_sound.play()
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
