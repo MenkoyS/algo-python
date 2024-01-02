@@ -27,7 +27,10 @@ class GameGUI:
 
         self.button_frame = self.create_button_frame()
         self.setup_buttons()
-
+        
+        self.turn_label = tk.Label(self.button_frame, text="Turn: Player 1", font=("Arial", 12), bg="black", fg="white")
+        self.turn_label.pack(pady=15, padx=20)
+        
     def setup_fullscreen(self) -> None:
         self.window.attributes('-fullscreen', True)
         self.window.resizable(False, False)
@@ -88,6 +91,8 @@ class GameGUI:
             self.round += 1
         else:
             self.handle_players_moves(row, col)
+        
+        self.numberCounter()
 
     def place_pawn(self, player, row, col) -> None:
         player.setCoordX(col)
@@ -104,7 +109,7 @@ class GameGUI:
             self.canvases[row][col].config(state=tk.DISABLED)
             self.canvases[row][col].unbind("<Button-1>")
             self.update_board()
-            self.play_sound_effect()  # Play the sound effect
+            self.play_sound_effect()  # ~~> play the sound effect
             self.round += 1
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
@@ -114,13 +119,14 @@ class GameGUI:
 
             self.playerToPlay = self.game.getPlayer2() if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
 
-    def play_sound_effect(self) -> None:
-        """
-        Play the sound effect for a pawn move.
+            self.numberCounter()
+    
+    def numberCounter(self) -> None:
+        player_turn = "Player 1" if self.round == -1 or self.round % 2 != 0 else "Player 2"
+        self.turn_label.config(text="Turn: {}".format(player_turn))
 
-        """
-        # Play the sound effect
-        self.move_sound.play()
+    def play_sound_effect(self) -> None:
+        self.move_sound.play() # ~~> play the sound effect
 
     def update_board(self) -> None:
         cell_size = self.window.winfo_screenheight() // self.game.getRows() - 2
