@@ -42,7 +42,7 @@ class GameGUI:
         self.setup_buttons()
 
         # Labels for turn and round
-        self.turn_label = tk.Label(self.button_frame, text="Turn: Player 1", font=("Arial", 12), bg="black", fg="white")
+        self.turn_label = tk.Label(self.button_frame, text="Turn: Player Red", font=("Arial", 12), bg="black", fg="white")
         self.turn_label.pack()
 
         self.round_label = tk.Label(self.button_frame, text="Round: 1", font=("Arial", 12), bg="black", fg="white")
@@ -124,6 +124,7 @@ class GameGUI:
         if self.player_placed < 2:
             self.place_pawn(self.game.getPlayer1() if self.player_placed == 0 else self.game.getPlayer2(), row, col)
             self.player_placed += 1
+            self.turn_label.config(text="Turn: Player {}".format("Blue" if self.player_placed == 1 else "Red"))
         else:
             self.handle_players_moves(row, col)
 
@@ -157,7 +158,7 @@ class GameGUI:
             self.play_sound_effect()
 
             if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
-                winner = self.playerToPlay.getPlayer()
+                winner = "Red" if self.playerToPlay.getPlayer() == 1 else "Blue"
                 messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!",
                                     detail="Thank you for playing our game.")
                 self.window.destroy()
@@ -172,7 +173,7 @@ class GameGUI:
         """
         Updates the label displaying the current player's turn.
         """
-        self.turn_label.config(text="Turn: Player {}".format(self.playerToPlay.getPlayer()))
+        self.turn_label.config(text="Turn: Player {}".format("Red" if self.playerToPlay.getPlayer() == 1 else "Blue"))
 
     def updateRound(self) -> None:
         """
