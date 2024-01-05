@@ -82,7 +82,7 @@ class LobbyGUI:
 
     def initializeAudio(self):
         mixer.init()
-        mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
+        mixer.music.load('./algo-python/assets/sounds/AmbientGuitarLobby.mp3')
         mixer.music.set_volume(0)
         mixer.music.play(-1)
 
