@@ -1,7 +1,6 @@
 from src.game import Game
 
 import tkinter as tk
-from tkinter import messagebox
 from sys import exit
 
 from pygame import mixer
@@ -138,7 +137,7 @@ Note that a pawn does not count as a mark.
 
 --> Block the opponent in the sense that he can no longer move his pawn.
         """
-        messagebox.showinfo(title="Game Rules",
+        tk.messagebox.showinfo(title="Game Rules",
                             message=rulesText, detail="by Yann & Raphaël")
 
     def onLabelClick(self, row, col) -> None:
@@ -184,11 +183,9 @@ Note that a pawn does not count as a mark.
             self.playSoundEffect()
 
             if self.game.checkWin(self.game.getPlayerToPlay(), self.game.pawnsToAlign):
-                winner = "Red" if self.game.getPlayerToPlay().getPlayer() == 1 else "Blue"
-                messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!",
-                                    detail="Thank you for playing our game.")
+                winner = self.game.getPlayerToPlay().getPlayer()
+                tk.messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing!") 
                 self.window.destroy()
-                exit()
 
             self.game.incrementRound()
             self.game.alternatePlayer()
@@ -264,7 +261,7 @@ Note that a pawn does not count as a mark.
         self.updatePlayerTurn()
         self.updateRound()
 
-        messagebox.showinfo(title="Restart Successful", message="Game restarted successfully!",
+        tk.messagebox.showinfo(title="Restart Successful", message="Game restarted successfully!",
                             detail="You can now play your new game.")
 
     def save(self) -> None:
@@ -272,7 +269,7 @@ Note that a pawn does not count as a mark.
         Saves the game and makes a confirmation message box.
         """
         self.game.saveGame()
-        messagebox.showinfo(title="Save Successful", message="Game saved successfully!",
+        tk.messagebox.showinfo(title="Save Successful", message="Game saved successfully!",
                             detail="You can quit and load your game later.")
 
     def toggleFullscreen(self) -> None:
@@ -286,8 +283,8 @@ Note that a pawn does not count as a mark.
         """
         Use a message box to get a confirmation to quit the game.
         """
-        if messagebox.askquestion(title="Quit", message="Would you really like to quit?") == "yes":
-            if messagebox.askquestion(title="Save before quitting", message="Would you like to save before quitting?") == "yes":
+        if tk.messagebox.askquestion(title="Quit", message="Would you really like to quit?") == "yes":
+            if tk.messagebox.askquestion(title="Save before quitting", message="Would you like to save before quitting?") == "yes":
                 self.save()
 
             self.window.destroy()
