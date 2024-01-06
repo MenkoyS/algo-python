@@ -5,7 +5,7 @@ import imageio
 from pygame import mixer
 
 videoName = 'poulet.mp4'
-relativePath = os.path.join(os.getcwd(), 'algo-python', 'assets', 'images', videoName)
+relativePath = os.path.join(os.getcwd(), 'assets', 'images', videoName)
 
 window = tk.Tk()
 window.title("Window with Video")
@@ -13,9 +13,9 @@ window.attributes('-fullscreen', True)
 
 mixer.init()
 
-musicPath = './algo-python/assets/sounds/VictorySound.mp3'
+musicPath = './assets/sounds/VictorySound.mp3'
 mixer.music.load(musicPath)
-mixer.music.set_volume(0)
+mixer.music.set_volume(0.5)
 
 video = imageio.get_reader(relativePath)
 videoWidth, videoHeight = video.get_meta_data()['size']

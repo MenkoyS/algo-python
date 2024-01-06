@@ -12,7 +12,7 @@ class WelcomeTextAnimator:
         self.root = root
         self.label = label
 
-        self.text = "Welcome !"
+        self.text = "Welcome "
         self.xPosition = root.winfo_screenwidth() // 2
         self.speed = 300
 
@@ -44,7 +44,7 @@ class LobbyGUI:
 
         self.welcomeTextAnimator = WelcomeTextAnimator(self.root, welcomeLabel)
 
-        labelFontSize = int(24 * self.root.winfo_width() / 1920)
+        labelFontSize = int(self.root.winfo_width() / 1920)
         ttk.Label(mainFrame, text="Choose the size of the game board", anchor='center', font=("TkDefaultFont", labelFontSize)).grid(columnspan=3, pady=(0, 100))
         sizeSlider = ttk.Scale(mainFrame, from_=8, to=12, variable=self.sizeVar, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 2, command=self.updateSizeSliderLabel, style="TScale")
         sizeSlider.grid(row=1, columnspan=2, pady=(20, 10))
@@ -82,7 +82,7 @@ class LobbyGUI:
 
     def initializeAudio(self):
         mixer.init()
-        mixer.music.load('./algo-python/assets/sounds/AmbientGuitarLobby.mp3')
+        mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
         mixer.music.set_volume(0)
         mixer.music.play(-1)
 
@@ -140,6 +140,5 @@ class LobbyGUI:
     def run(self):
         self.root.mainloop()
 
-if __name__ == "__main__":
-    app = LobbyGUI()
-    app.run()
+lobby = LobbyGUI()
+lobby.run()
