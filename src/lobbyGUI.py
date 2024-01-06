@@ -1,5 +1,5 @@
-from game import Game
-from gameGUI import GameGUI
+from src.game import Game
+from src.gameGUI import GameGUI
 
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -139,6 +139,3 @@ class LobbyGUI:
 
     def run(self):
         self.root.mainloop()
-
-lobby = LobbyGUI()
-lobby.run()

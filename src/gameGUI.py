@@ -1,11 +1,10 @@
+from src.game import Game
+
 import tkinter as tk
 from tkinter import messagebox
 from sys import exit
 
 from pygame import mixer
-
-from game import Game
-
 
 class GameGUI:
     def __init__(self, game) -> None:
@@ -14,12 +13,11 @@ class GameGUI:
         :param game: object<Game>, The instance of the game.
         """
         self.game = game
-        self.round = 1
-        self.playerPlaced = 0
-        self.playerToPlay = self.game.getPlayer1()
         self.initWindow()
         mixer.init()
         self.moveSound = mixer.Sound('assets/sounds/PawnMove.mp3')
+        self.updatePlayerTurn()
+        self.updateRound()
 
     def initWindow(self) -> None:
         """
@@ -147,12 +145,12 @@ Note that a pawn does not count as a mark.
         """
         Handles the click event on a cell.
         """
-        if self.playerPlaced < 2:
-            self.placePawn(self.game.getPlayer1() if self.playerPlaced ==
+        if self.game.playerPlaced < 2:
+            self.placePawn(self.game.getPlayer1() if self.game.playerPlaced ==
                            0 else self.game.getPlayer2(), row, col)
-            self.playerPlaced += 1
+            self.game.playerPlaced += 1
             self.turnLabel.config(text="Turn: Player {}".format(
-                "2" if self.playerPlaced == 1 else "1"))
+                "2" if self.game.playerPlaced == 1 else "1"))
         else:
             self.handlePlayersMoves(row, col)
 
@@ -178,23 +176,22 @@ Note that a pawn does not count as a mark.
         :param row: int, Row index
         :param col: int, Column index
         """
-        if (col, row) in self.game.possibleCell(self.playerToPlay):
-            self.game.movePawn(self.playerToPlay, (col, row))
+        if (col, row) in self.game.possibleCell(self.game.getPlayerToPlay()):
+            self.game.movePawn(self.game.getPlayerToPlay(), (col, row))
             self.canvases[row][col].config(state=tk.DISABLED)
             self.canvases[row][col].unbind("<Button-1>")
             self.updateBoard()
             self.playSoundEffect()
 
-            if self.game.checkWin(self.playerToPlay, self.game.pawnsToAlign):
-                winner = "Red" if self.playerToPlay.getPlayer() == 1 else "Blue"
+            if self.game.checkWin(self.game.getPlayerToPlay(), self.game.pawnsToAlign):
+                winner = "Red" if self.game.getPlayerToPlay().getPlayer() == 1 else "Blue"
                 messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!",
                                     detail="Thank you for playing our game.")
                 self.window.destroy()
                 exit()
 
-            self.round += 1
-            self.playerToPlay = self.game.getPlayer2(
-            ) if self.playerToPlay == self.game.getPlayer1() else self.game.getPlayer1()
+            self.game.incrementRound()
+            self.game.alternatePlayer()
             self.updatePlayerTurn()
             self.updateRound()
 
@@ -203,13 +200,13 @@ Note that a pawn does not count as a mark.
         Updates the label displaying the current player's turn.
         """
         self.turnLabel.config(text="Turn: Player {}".format(
-            self.playerToPlay.getPlayer()))
+            self.game.getPlayerToPlay().getPlayer()))
 
     def updateRound(self) -> None:
         """
         Updates the label displaying the current round number.
         """
-        self.roundLabel.config(text="Round: {}".format(self.round))
+        self.roundLabel.config(text="Round: {}".format(self.game.getRound()))
 
     def playSoundEffect(self) -> None:
         """
@@ -245,7 +242,7 @@ Note that a pawn does not count as a mark.
                                        cellSize-10, fill="blue", width=10)
                     canvas.create_line(
                         10, cellSize-10, cellSize-10, 10, fill="blue", width=10)
-                elif self.playerPlaced == 2 and (col, row) in self.game.possibleCell(self.playerToPlay):
+                elif self.game.playerPlaced == 2 and (col, row) in self.game.possibleCell(self.game.getPlayerToPlay()):
                     canvas.create_oval(20, 20, cellSize-20,
                                        cellSize-20, fill="gray", outline="gray")
 
@@ -257,9 +254,9 @@ Note that a pawn does not count as a mark.
         pawnsToAlign = self.game.pawnsToAlign
         self.game = Game(rows=gameSize, columns=gameSize,
                          pawnsToAlign=pawnsToAlign)
-        self.playerPlaced = 0
-        self.round = 1
-        self.playerToPlay = self.game.getPlayer1()
+        self.game.playerPlaced = 0
+        self.game.round = 1
+        self.game.playerToPlay = self.game.getPlayer1()
 
         # Reset canvases
         self.canvases = self.createBoardCanvases()

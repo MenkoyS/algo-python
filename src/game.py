@@ -1,4 +1,4 @@
-from pawn import Pawn
+from src.pawn import Pawn
 
 class Game:
     """
@@ -17,6 +17,10 @@ class Game:
         self.player2 = Pawn(2)
         self.board = [[0 for _ in range(self.columns)]
                       for _ in range(self.rows)]
+        
+        self.round = 1
+        self.playerToPlay = self.player1
+        self.playerPlaced = 0
         
     def getRows(self) -> int:
         """
@@ -54,6 +58,20 @@ class Game:
         :return: object<Pawn>, The player 2 object.
         """
         return self.player2
+    
+    def getRound(self) -> int:
+        """
+        Get the current round.
+        :return: int, The current round.
+        """
+        return self.round
+    
+    def getPlayerToPlay(self) -> object:
+        """
+        Get the player to play.
+        :return: object<Pawn>, The player to play.
+        """
+        return self.playerToPlay
 
     def setRows(self, numberRows) -> None:
         """
@@ -77,6 +95,18 @@ class Game:
         :param value: int, The new value for the cell.
         """
         self.board[row][column] = value
+
+    def incrementRound(self) -> None:
+        """
+        Increment the round counter.
+        """
+        self.round += 1
+
+    def alternatePlayer(self) -> None:
+        """
+        Alternate the player to play.
+        """
+        self.playerToPlay = self.player1 if self.playerToPlay == self.player2 else self.player2
 
     def possibleCell(self, pawn) -> list:
         """
@@ -182,6 +212,9 @@ class Game:
             file.write(f"{self.rows}\n")
             file.write(f"{self.columns}\n")
             file.write(f"{self.pawnsToAlign}\n")
+            file.write(f"{self.round}\n")
+            file.write(f"{self.playerToPlay.getPlayer()}\n")
+            file.write(f"{self.playerPlaced}\n")
 
             file.write(
                 f"{self.player1.getCoordX()} {self.player1.getCoordY()}\n")
@@ -189,9 +222,15 @@ class Game:
                 f"{self.player2.getCoordX()} {self.player2.getCoordY()}\n")
 
             for row in self.board:
-                file.write(" ".join(map(str, row)) + "\n")
+                line = []
+                for cell in row:
+                    if isinstance(cell, Pawn):
+                        line.append(cell.getPlayer()+2)
+                    else:
+                        line.append(cell)
+                file.write(" ".join(map(str, line)) + "\n")
 
-    def loadGame(self, filename="save_game.txt") -> None:
+    def loadGame(self, filename="save.txt") -> None:
         """
         Load the game state from a file.
         :param filename: str, The name of the file to load the game from.
@@ -201,6 +240,9 @@ class Game:
                 self.rows = int(file.readline())
                 self.columns = int(file.readline())
                 self.pawnsToAlign = int(file.readline())
+                self.round = int(file.readline())
+                self.playerToPlay = self.player1 if int(file.readline()) == 1 else self.player2
+                self.playerPlaced = int(file.readline())
 
                 player1_coords = tuple(map(int, file.readline().split()))
                 player2_coords = tuple(map(int, file.readline().split()))
@@ -211,7 +253,7 @@ class Game:
                 self.player2.setCoordX(player2_coords[0])
                 self.player2.setCoordY(player2_coords[1])
 
-                self.board = [list(map(int, line.split())) for line in file]
+                self.board = [[self.player1 if cell == 3 else self.player2 if cell == 4 else cell for cell in map(int, line.split())] for line in file]
 
         except FileNotFoundError:
             print("Save file not found. Starting a new game.")
