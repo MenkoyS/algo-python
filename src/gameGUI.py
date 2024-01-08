@@ -97,7 +97,7 @@ class GameGUI:
         """
         buttonFrame = tk.Frame(self.window)
         buttonFrame.config(width=self.window.winfo_screenwidth(), bg="black")
-        buttonFrame.pack(side=tk.RIGHT, anchor=tk.CENTER, expand=True)
+        buttonFrame.pack(side=tk.RIGHT, padx=100)
 
         return buttonFrame
 
