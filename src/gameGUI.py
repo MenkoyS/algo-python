@@ -1,5 +1,6 @@
-from game import Game
-from winnerGUI import Winner1Wins, Winner2Wins
+from src.game import Game
+from src.winnerGUI import Winner1Wins, Winner2Wins
+
 import tkinter as tk
 from sys import exit
 
