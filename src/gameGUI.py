@@ -1,43 +1,32 @@
 from src.game import Game
-from src.winnerGUI import Winner1Wins, Winner2Wins
-
 import tkinter as tk
-from sys import exit
-
+from tkinter import ttk
 from pygame import mixer
 
 class GameGUI:
     def __init__(self, game) -> None:
-        """
-        Initializes the Game GUI.
-        :param game: object<Game>, The instance of the game.
-        """
         self.game = game
         self.initWindow()
         mixer.init()
         self.moveSound = mixer.Sound('assets/sounds/PawnMove.mp3')
+        self.initVolumeBar()
+        self.initializeAudio()  # Ajout de cet appel
         self.updatePlayerTurn()
         self.updateRound()
 
     def initWindow(self) -> None:
-        """
-        Initializes the main window.
-        """
         self.window = tk.Tk()
         self.window.title("GameGUI")
         self.setupFullscreen()
         self.window.config(bg="black")
 
-        # Create board frame and canvases
         self.boardFrame = self.createBoardFrame()
         self.canvases = self.createBoardCanvases()
         self.updateBoard()
 
-        # Create button frame and buttons
         self.buttonFrame = self.createButtonFrame()
         self.setupButtons()
 
-        # Labels for turn and round
         self.turnLabel = tk.Label(self.buttonFrame, text="Turn: Player 1", font=(
             "Arial", 20), bg="black", fg="white")
         self.turnLabel.pack()
@@ -47,19 +36,12 @@ class GameGUI:
         self.roundLabel.pack(pady=40)
 
     def setupFullscreen(self) -> None:
-        """
-        Sets up the window to fullscreen mode.
-        """
         self.window.attributes('-fullscreen', True)
         self.window.resizable(False, False)
         self.window.geometry(
             f"{self.window.winfo_screenwidth()}x{self.window.winfo_screenheight()-40}")
 
     def createBoardFrame(self) -> tk.Frame:
-        """
-        Creates the frame for the game board.
-        :return: object<Frame>, The frame for the game board.
-        """
         boardFrame = tk.Frame(self.window)
         boardFrame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
@@ -71,10 +53,6 @@ class GameGUI:
         return boardFrame
 
     def createBoardCanvases(self) -> list[list[tk.Canvas]]:
-        """
-        Creates the canvases for the cells of the game board.
-        :return: list<list<Canvas>>, The canvases for the cells of the game board.
-        """
         cellSize = self.window.winfo_screenheight() // self.game.getRows() - 2
         canvases = [[None for _ in range(self.game.getColumns())]
                     for _ in range(self.game.getRows())]
@@ -92,10 +70,6 @@ class GameGUI:
         return canvases
 
     def createButtonFrame(self) -> tk.Frame:
-        """
-        Creates the frame for the buttons.
-        :return: object<Frame>, The frame for the buttons.
-        """
         buttonFrame = tk.Frame(self.window)
         buttonFrame.config(width=self.window.winfo_screenwidth(), bg="black")
         buttonFrame.pack(side=tk.RIGHT, padx=100)
@@ -103,9 +77,6 @@ class GameGUI:
         return buttonFrame
 
     def setupButtons(self) -> None:
-        """
-        Sets up the buttons.
-        """
         buttonWidth = self.window.winfo_screenwidth() // 40
         buttonHeight = self.window.winfo_screenheight() // 300
 
@@ -127,10 +98,26 @@ class GameGUI:
                                 font=("Arial", 12), bg="#FFFFFF", fg="black", padx=10, pady=5, bd=2, command=self.showRules)
         rulesButton.pack(side=tk.BOTTOM, anchor=tk.SE, padx=20)
 
+
+    def initVolumeBar(self):
+        self.volumeVar = tk.DoubleVar(value=50)
+        volumeSlider = ttk.Scale(self.buttonFrame, from_=0, to=100, variable=self.volumeVar, orient=tk.HORIZONTAL, length=self.window.winfo_screenwidth() // 4, command=self.updateVolume, style="TScale")
+        volumeSlider.pack(side=tk.RIGHT, padx=20, pady=30)
+
+    def initializeAudio(self):
+        mixer.init()
+        mixer.music.load('./assets/sounds/AmbientPianoGame.mp3')
+        mixer.music.set_volume(self.volumeVar.get() / 100)
+        mixer.music.play(-1)
+
+
+
+    def updateVolume(self, event=None):
+        volumeLevel = self.volumeVar.get() / 100
+        mixer.music.set_volume(volumeLevel)
+
+
     def showRules(self) -> None:
-        """
-        Shows the rules of the game in a message box.
-        """
         rulesText = """To win the game, a player must satisfy one of the following two conditions:
         
 --> Align the number of marks of its color you choose in the lobby (horizontally, vertically or in one of the two diagonals). 
@@ -139,12 +126,9 @@ Note that a pawn does not count as a mark.
 --> Block the opponent in the sense that he can no longer move his pawn.
         """
         tk.messagebox.showinfo(title="Game Rules",
-                            message=rulesText, detail="by Yann & Raphaël")
+                            message=rulesText, detail="Copyright, Mog Studios, all rights deserved.")
 
     def onLabelClick(self, row, col) -> None:
-        """
-        Handles the click event on a cell.
-        """
         if self.game.playerPlaced < 2:
             self.placePawn(self.game.getPlayer1() if self.game.playerPlaced ==
                            0 else self.game.getPlayer2(), row, col)
@@ -155,14 +139,7 @@ Note that a pawn does not count as a mark.
         else:
             self.handlePlayersMoves(row, col)
 
-
     def placePawn(self, player, row, col) -> None:
-        """
-        Places a pawn on the game board.
-        :param player: object<Pawn>, Player object
-        :param row: int, Row index
-        :param col: int, Column index
-        """
         player.setCoordX(col)
         player.setCoordY(row)
         self.game.setCell(row, col, player)
@@ -171,11 +148,6 @@ Note that a pawn does not count as a mark.
         self.canvases[row][col].unbind("<Button-1>")
 
     def handlePlayersMoves(self, row, col) -> None:
-        """
-        Handles the moves of the players.
-        :param row: int, Row index
-        :param col: int, Column index
-        """
         if (col, row) in self.game.possibleCell(self.game.getPlayerToPlay()):
             self.game.movePawn(self.game.getPlayerToPlay(), (col, row))
             self.canvases[row][col].config(state=tk.DISABLED)
@@ -185,6 +157,9 @@ Note that a pawn does not count as a mark.
 
             if self.game.checkWin(self.game.getPlayerToPlay(), self.game.pawnsToAlign):
                 winner = self.game.getPlayerToPlay().getPlayer()
+                mixer.music.stop()
+                victorySound = mixer.Sound('./assets/sounds/VictorySound.mp3')
+                victorySound.play()
                 tk.messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing!")
                 REPLAY = True if tk.messagebox.askquestion(title="Replay", message="Would you like to replay ?") == "yes" else False
                 if REPLAY == True:
@@ -201,28 +176,16 @@ Note that a pawn does not count as a mark.
                 self.updateBoard()
 
     def updatePlayerTurn(self) -> None:
-        """
-        Updates the label displaying the current player's turn.
-        """
         self.turnLabel.config(text="Turn: Player {}".format(
             self.game.getPlayerToPlay().getPlayer()))
 
     def updateRound(self) -> None:
-        """
-        Updates the label displaying the current round number.
-        """
         self.roundLabel.config(text="Round: {}".format(self.game.getRound()))
 
     def playSoundEffect(self) -> None:
-        """
-        Plays the sound effect for pawn movement.
-        """
         self.moveSound.play()
 
     def updateBoard(self) -> None:
-        """
-        Updates the game board display.
-        """
         cellSize = self.window.winfo_screenheight() // self.game.getRows() - 2
         for row in range(self.game.getRows()):
             for col in range(self.game.getColumns()):
@@ -252,9 +215,6 @@ Note that a pawn does not count as a mark.
                                        cellSize-20, fill="gray", outline="gray")
 
     def restartGame(self) -> None:
-        """
-        Restarts the game using the same parameters and makes a confirmation message box.
-        """
         gameSize = self.game.getColumns()
         pawnsToAlign = self.game.pawnsToAlign
         self.game = Game(rows=gameSize, columns=gameSize,
@@ -263,7 +223,6 @@ Note that a pawn does not count as a mark.
         self.game.round = 1
         self.game.playerToPlay = self.game.getPlayer1()
 
-        # Reset canvases
         self.canvases = self.createBoardCanvases()
         self.updateBoard()
         self.updatePlayerTurn()
@@ -273,24 +232,15 @@ Note that a pawn does not count as a mark.
                             detail="You can now play your new game.")
 
     def save(self) -> None:
-        """
-        Saves the game and makes a confirmation message box.
-        """
         self.game.saveGame()
         tk.messagebox.showinfo(title="Save Successful", message="Game saved successfully!",
                             detail="You can quit and load your game later.")
 
     def toggleFullscreen(self) -> None:
-        """
-        Toggles fullscreen mode.
-        """
         self.window.attributes(
             '-fullscreen', not self.window.attributes('-fullscreen'))
 
     def quit(self) -> None:
-        """
-        Use a message box to get a confirmation to quit the game.
-        """
         if tk.messagebox.askquestion(title="Quit", message="Would you really like to quit?") == "yes":
             if tk.messagebox.askquestion(title="Save before quitting", message="Would you like to save before quitting?") == "yes":
                 self.save()
@@ -299,7 +249,4 @@ Note that a pawn does not count as a mark.
             exit()
 
     def run(self) -> None:
-        """
-        Runs the GUI.
-        """
         self.window.mainloop()

@@ -65,7 +65,7 @@ class WelcomeApp:
             tk_image = self.applyTransparency(self.tk_image, alpha)
             self.canvas.itemconfig(self.canvas.find_all()[0], image=tk_image)
             self.root.update()
-            self.root.after(20)
+            self.root.after(3)
 
         self.fadeOut()
 
@@ -79,7 +79,7 @@ class WelcomeApp:
             tk_image = self.applyTransparency(self.tk_image, alpha)
             self.canvas.itemconfig(self.canvas.find_all()[0], image=tk_image)
             self.root.update()
-            self.root.after(20)
+            self.root.after(3)
 
         # ~~> delete img | sound effect
         self.canvas.delete("all")
@@ -87,7 +87,7 @@ class WelcomeApp:
         mixer.music.load("./assets/sounds/writing.mp3")
         mixer.music.play(0, 0.0)
 
-        self.showWelcomeTextDynamic("Marie n'est pas autorisée à jouer à ce jeu.")
+        self.showWelcomeTextDynamic("Bienvenue sur L-Knight Battle, amusez-vous bien.")
 
     def applyTransparency(self, tk_image, alpha):
         """

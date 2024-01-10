@@ -12,7 +12,7 @@ class WelcomeTextAnimator:
         self.root = root
         self.label = label
 
-        self.text = "Welcome "
+        self.text = "Welcome to L-Knight-Battle "
         self.xPosition = root.winfo_screenwidth() // 2
         self.speed = 300
 
@@ -60,16 +60,22 @@ class LobbyGUI:
         self.pawnLabel.grid(row=6, column=0, columnspan=2, pady=(40, 40))
 
         self.switchButton = ttk.Button(mainFrame, text="Go windowed", command=self.toggleFullscreen)
-        self.switchButton.grid(row=9, column=1, columnspan=2, pady=(10, 10))
+        self.switchButton.grid(row=10, column=0, pady=(10, 10), columnspan=2)
 
-        newWindowButton = ttk.Button(mainFrame, text="Start Game", command=self.openNewWindow)
-        newWindowButton.grid(row=8, column=0, columnspan=2, pady=(20, 0))
+        newWindowButton = ttk.Button(mainFrame, text="Play vs Friend", command=self.openNewWindow)
+        newWindowButton.grid(row=8, column=0, pady=(10, 10), columnspan=2)
         
+        playervsbotButton = ttk.Button(mainFrame, text="Play vs AI") # - command=self.commandebot
+        playervsbotButton.grid(row=9, column=0, pady=(10, 10), columnspan=2)
+
         quitButton = ttk.Button(mainFrame, text="Quit", command=self.confirmQuit)
-        quitButton.grid(row=9, column=0, columnspan=2, pady=(10, 10))
+        quitButton.grid(row=11, column=0, pady=(10, 10), columnspan=2)
+
+        volumeIconLabel = ttk.Label(mainFrame, text="🔊", font=("Segoe UI Emoji", 12))  # Utilisez la police qui prend en charge les emojis
+        volumeIconLabel.grid(row=12, column=0, pady=(30, 0), padx=(10, 5), sticky='e')
 
         volumeSlider = ttk.Scale(mainFrame, from_=0, to=100, variable=self.volumeVar, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.updateVolume, style="TScale")
-        volumeSlider.grid(row=9, column=0, columnspan=2, pady=(100, 0), sticky='se')
+        volumeSlider.grid(row=12, column=1, columnspan=2, pady=(30, 0), padx=(0, 10), sticky='w')
 
         self.welcomeTextAnimator.animateText()
 
@@ -83,7 +89,7 @@ class LobbyGUI:
     def initializeAudio(self):
         mixer.init()
         mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
-        mixer.music.set_volume(0)
+        mixer.music.set_volume(0.5)
         mixer.music.play(-1)
 
     def initializeVariables(self):
