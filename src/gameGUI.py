@@ -151,10 +151,10 @@ Note that a pawn does not count as a mark.
             self.game.playerPlaced += 1
             self.turnLabel.config(text="Turn: Player {}".format(
                 "2" if self.game.playerPlaced == 1 else "1"))
+            self.updateBoard()
         else:
             self.handlePlayersMoves(row, col)
 
-        self.updateBoard()
 
     def placePawn(self, player, row, col) -> None:
         """
@@ -185,13 +185,20 @@ Note that a pawn does not count as a mark.
 
             if self.game.checkWin(self.game.getPlayerToPlay(), self.game.pawnsToAlign):
                 winner = self.game.getPlayerToPlay().getPlayer()
-                tk.messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing!") 
-                self.window.destroy()
+                tk.messagebox.showinfo(title="Game Over", message=f"Player {winner} wins!", detail="Thank you for playing!")
+                REPLAY = True if tk.messagebox.askquestion(title="Replay", message="Would you like to replay ?") == "yes" else False
+                if REPLAY == True:
+                    self.restartGame()
+                else:
+                    self.window.destroy()
+                    exit()
 
-            self.game.incrementRound()
-            self.game.alternatePlayer()
-            self.updatePlayerTurn()
-            self.updateRound()
+            else:
+                self.game.incrementRound()
+                self.game.alternatePlayer()
+                self.updatePlayerTurn()
+                self.updateRound()
+                self.updateBoard()
 
     def updatePlayerTurn(self) -> None:
         """
