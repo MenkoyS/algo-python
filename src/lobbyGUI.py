@@ -1,11 +1,38 @@
+# Prendre des fonctionnalités d'autres fichiers
 from src.game import Game
 from src.gameGUI import GameGUI
+import platform
 
+
+try:
+    import tkinter as tk
+    import os
+    from PIL import Image, ImageTk
+    from pygame import mixer
+    from tkinter import ttk, messagebox
+    from ttkthemes import ThemedTk
+
+except ImportError as e:
+            print(f"Erreur d'importation : {e}")
+            print("Veuillez vérifier les dépendances en exécutant : pip install -r requirements.txt")
+            print("Le fichier requirements.txt doit contenir les modules suivants :")
+            print("tkinter, Pillow, pygame, ttkthemes")
+
+            # Ouvrir le fichier requirements.txt dans un éditeur de texte en fonction du système d'exploitation
+            if platform.system() == "Windows":
+                os.system("notepad requirements.txt")
+            elif platform.system() == "Linux":
+                os.system("gedit requirements.txt")
+            elif platform.system() == "Darwin":  # macOS
+                os.system("open -e requirements.txt")
+            else:
+                print("Système d'exploitation non pris en charge. Veuillez ouvrir requirements.txt manuellement.")
+            exit(1) 
+# Import des librairies souhaitées
 import tkinter as tk
 from tkinter import ttk, messagebox
-
 from ttkthemes import ThemedTk
-from pygame import mixer
+from pygame import mixer # ~~> Pour musique de fond ici 
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
@@ -144,4 +171,29 @@ class LobbyGUI:
         newWindow.run()
 
     def run(self):
+        try:
+            import tkinter as tk
+            import os
+            from PIL import Image, ImageTk
+            from pygame import mixer
+            from tkinter import ttk, messagebox
+            from ttkthemes import ThemedTk
+
+        except ImportError as e:
+            print(f"Erreur d'importation : {e}")
+            print("Veuillez vérifier les dépendances en exécutant : pip install -r requirements.txt")
+            print("Le fichier requirements.txt doit contenir les modules suivants :")
+            print("tkinter, Pillow, pygame, ttkthemes")
+
+            # Ouvrir le fichier requirements.txt dans un éditeur de texte en fonction du système d'exploitation
+            if platform.system() == "Windows":
+                os.system("notepad requirements.txt")
+            elif platform.system() == "Linux":
+                os.system("gedit requirements.txt")
+            elif platform.system() == "Darwin":  # macOS
+                os.system("open -e requirements.txt")
+            else:
+                print("Système d'exploitation non pris en charge. Veuillez ouvrir requirements.txt manuellement.")
+            exit(1) 
         self.root.mainloop()
+        

@@ -10,7 +10,7 @@ class GameGUI:
         mixer.init()
         self.moveSound = mixer.Sound('assets/sounds/PawnMove.mp3')
         self.initVolumeBar()
-        self.initializeAudio()  # Ajout de cet appel
+        self.initializeAudio()
         self.updatePlayerTurn()
         self.updateRound()
 

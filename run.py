@@ -7,6 +7,8 @@ import os
 
 from PIL import Image, ImageTk
 from pygame import mixer
+import platform
+
 
 class WelcomeApp:
     def __init__(self):
@@ -158,11 +160,11 @@ class WelcomeApp:
             ~> bool: True if the game has been saved, False otherwise.
         """
         return os.path.isfile(f"./src/game_save/{filename}")
-    
+
     def run(self):
         """
         ~~~> Run the WelcomeApp.
-        """
+        """       
         self.root.mainloop()
 
 if __name__ == "__main__":
