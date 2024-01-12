@@ -92,7 +92,7 @@ class LobbyGUI:
         newWindowButton = ttk.Button(mainFrame, text="Play vs Friend", command=self.openNewWindow)
         newWindowButton.grid(row=8, column=0, pady=(10, 10), columnspan=2)
         
-        playervsbotButton = ttk.Button(mainFrame, text="Play vs AI") # - command=self.commandebot
+        playervsbotButton = ttk.Button(mainFrame, text="Play vs AI", command=self.commandeBot)
         playervsbotButton.grid(row=9, column=0, pady=(10, 10), columnspan=2)
 
         quitButton = ttk.Button(mainFrame, text="Quit", command=self.confirmQuit)
@@ -166,7 +166,14 @@ class LobbyGUI:
     def openNewWindow(self):
         self.root.destroy()
         mixer.music.stop()
-        game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()))
+        game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()), botMode=False)
+        newWindow = GameGUI(game)
+        newWindow.run()
+
+    def commandeBot(self):
+        self.root.destroy()
+        mixer.music.stop()
+        game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()), botMode=True)
         newWindow = GameGUI(game)
         newWindow.run()
 

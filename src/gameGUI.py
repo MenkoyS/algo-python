@@ -1,5 +1,6 @@
 from src.game import Game
 import tkinter as tk
+from random import randint, choice
 from tkinter import ttk
 from pygame import mixer
 
@@ -147,6 +148,23 @@ Note that a pawn does not count as a mark.
         self.canvases[row][col].config(state=tk.DISABLED)
         self.canvases[row][col].unbind("<Button-1>")
 
+        if self.game.botMode:
+            x, y = col, row
+            player2 = self.game.getPlayer2()
+
+            while (x, y) == (col, row):
+
+                x = randint(0, self.game.getColumns()-1)
+                y = randint(0, self.game.getRows()-1)
+            player2.setCoordX(x)
+            player2.setCoordY(y)
+            self.game.setCell(y, x, player2)
+
+            self.canvases[y][x].config(state=tk.DISABLED)
+            self.canvases[y][x].unbind("<Button-1>")
+            self.game.playerPlaced = 1
+        self.updateBoard()
+
     def handlePlayersMoves(self, row, col) -> None:
         if (col, row) in self.game.possibleCell(self.game.getPlayerToPlay()):
             self.game.movePawn(self.game.getPlayerToPlay(), (col, row))
@@ -169,11 +187,21 @@ Note that a pawn does not count as a mark.
                     exit()
 
             else:
-                self.game.incrementRound()
-                self.game.alternatePlayer()
-                self.updatePlayerTurn()
-                self.updateRound()
-                self.updateBoard()
+
+                if self.game.botMode:
+                    x, y = choice(self.game.possibleCell(self.game.getPlayer2()))
+                    self.game.movePawn(self.game.getPlayer2(), (x, y))
+                    self.canvases[y][x].config(state=tk.DISABLED)
+                    self.canvases[y][x].unbind("<Button-1>")
+
+                    self.game.incrementRound()
+                    self.game.incrementRound()
+                else:
+                    self.game.incrementRound()
+                    self.game.alternatePlayer()
+        self.updatePlayerTurn()
+        self.updateRound()            
+        self.updateBoard()
 
     def updatePlayerTurn(self) -> None:
         self.turnLabel.config(text="Turn: Player {}".format(
