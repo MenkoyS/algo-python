@@ -245,8 +245,9 @@ Note that a pawn does not count as a mark.
     def restartGame(self) -> None:
         gameSize = self.game.getColumns()
         pawnsToAlign = self.game.pawnsToAlign
+        botMode = self.game.botMode
         self.game = Game(rows=gameSize, columns=gameSize,
-                         pawnsToAlign=pawnsToAlign)
+                         pawnsToAlign=pawnsToAlign, botMode=botMode)
         self.game.playerPlaced = 0
         self.game.round = 1
         self.game.playerToPlay = self.game.getPlayer1()
