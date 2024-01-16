@@ -1,0 +1,3 @@
+Please install the dependencies required using this command in the terminal : 
+
+pip install -r requirements.txt

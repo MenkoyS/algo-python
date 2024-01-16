@@ -1,15 +1,9 @@
-# Prendre des fonctionnalités d'autres fichiers
-from src.game import Game
-from src.gameGUI import GameGUI
 import platform
-
+import os
 
 try:
-    import tkinter as tk
-    import os
     from PIL import Image, ImageTk
     from pygame import mixer
-    from tkinter import ttk, messagebox
     from ttkthemes import ThemedTk
 
 except ImportError as e:
@@ -18,20 +12,21 @@ except ImportError as e:
 
             # Ouvrir le fichier requirements.txt dans un éditeur de texte en fonction du système d'exploitation
             if platform.system() == "Windows":
-                os.system("notepad requirements.txt")
+                os.system("notepad dependenciesGuide.txt")
             elif platform.system() == "Linux":
-                os.system("gedit requirements.txt")
+                os.system("gedit dependenciesGuide.txt")
             elif platform.system() == "Darwin":  # macOS
-                os.system("open -e requirements.txt")
+                os.system("open -e dependenciesGuide.txt")
             else:
                 print("Unsupported operating system.")
             exit(1) 
-            
-# Import des librairies souhaitées
+
+from src.game import Game
+from src.gameGUI import GameGUI
 import tkinter as tk
 from tkinter import ttk, messagebox
 from ttkthemes import ThemedTk
-from pygame import mixer # ~~> Pour musique de fond ici 
+from pygame import mixer
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
