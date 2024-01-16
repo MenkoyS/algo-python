@@ -6,12 +6,14 @@ class Game:
     :param rows: 8 <= int <= 12, The number of rows on the game board.
     :param columns: 8 <= int <= 12, The number of columns on the game board.
     :param pawnsToAlign: 4 <= int <= 6, The number of pawns needed to win the game.
+    :param botMode: bool, Tell if the game is against a Bot
     """
 
-    def __init__(self, rows=10, columns=10, pawnsToAlign=5) -> None:
+    def __init__(self, rows=10, columns=10, pawnsToAlign=5, botMode=True) -> None:
         self.rows = rows
         self.columns = columns
         self.pawnsToAlign = pawnsToAlign
+        self.botMode = botMode
 
         self.player1 = Pawn(1)
         self.player2 = Pawn(2)
@@ -215,6 +217,7 @@ class Game:
             file.write(f"{self.round}\n")
             file.write(f"{self.playerToPlay.getPlayer()}\n")
             file.write(f"{self.playerPlaced}\n")
+            file.write(f"{self.botMode}\n")
 
             file.write(
                 f"{self.player1.getCoordX()} {self.player1.getCoordY()}\n")
@@ -243,6 +246,7 @@ class Game:
                 self.round = int(file.readline())
                 self.playerToPlay = self.player1 if int(file.readline()) == 1 else self.player2
                 self.playerPlaced = int(file.readline())
+                self.botMode = True if file.readline() == "True\n" else False
 
                 player1_coords = tuple(map(int, file.readline().split()))
                 player2_coords = tuple(map(int, file.readline().split()))
