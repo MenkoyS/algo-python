@@ -56,7 +56,7 @@ class GameGUI:
         cellSize = self.window.winfo_screenheight() // self.game.getRows() - 2
         canvases = [[None for _ in range(self.game.getColumns())]
                     for _ in range(self.game.getRows())]
-
+    
         for row in range(self.game.getRows()):
             for col in range(self.game.getColumns()):
                 canvas = tk.Canvas(self.boardFrame, width=cellSize,

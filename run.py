@@ -7,7 +7,6 @@ import os
 
 from PIL import Image, ImageTk
 from pygame import mixer
-import platform
 
 
 class WelcomeApp:
@@ -89,7 +88,7 @@ class WelcomeApp:
         mixer.music.load("./assets/sounds/writing.mp3")
         mixer.music.play(0, 0.0)
 
-        self.showWelcomeTextDynamic("Bienvenue sur L-Knight Battle, amusez-vous bien.")
+        self.showWelcomeTextDynamic("Welcome to L-Knight Battle, have fun.")
 
     def applyTransparency(self, tk_image, alpha):
         """

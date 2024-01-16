@@ -13,10 +13,8 @@ try:
     from ttkthemes import ThemedTk
 
 except ImportError as e:
-            print(f"Erreur d'importation : {e}")
-            print("Veuillez vérifier les dépendances en exécutant : pip install -r requirements.txt")
-            print("Le fichier requirements.txt doit contenir les modules suivants :")
-            print("tkinter, Pillow, pygame, ttkthemes")
+            print(f"Import Error : {e}")
+            print("Please verify if you have the dependencies required : pip install -r requirements.txt")
 
             # Ouvrir le fichier requirements.txt dans un éditeur de texte en fonction du système d'exploitation
             if platform.system() == "Windows":
@@ -26,8 +24,9 @@ except ImportError as e:
             elif platform.system() == "Darwin":  # macOS
                 os.system("open -e requirements.txt")
             else:
-                print("Système d'exploitation non pris en charge. Veuillez ouvrir requirements.txt manuellement.")
+                print("Unsupported operating system.")
             exit(1) 
+            
 # Import des librairies souhaitées
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -39,7 +38,7 @@ class WelcomeTextAnimator:
         self.root = root
         self.label = label
 
-        self.text = "Welcome to L-Knight-Battle "
+        self.text = "Welcome to L-Knight Battle "
         self.xPosition = root.winfo_screenwidth() // 2
         self.speed = 300
 
