@@ -1,6 +1,7 @@
 from src.game import Game
 import tkinter as tk
 from random import randint, choice
+from os import remove
 from tkinter import ttk
 from pygame import mixer
 
@@ -174,6 +175,10 @@ Note that a pawn does not count as a mark.
             self.playSoundEffect()
 
             if self.game.checkWin(self.game.getPlayerToPlay(), self.game.pawnsToAlign):
+                try:
+                    remove('./src/game_save/save.txt')
+                except:
+                    print("No save file found")
                 winner = self.game.getPlayerToPlay().getPlayer()
                 mixer.music.stop()
                 victorySound = mixer.Sound('./assets/sounds/VictorySound.mp3')

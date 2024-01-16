@@ -246,7 +246,7 @@ class Game:
                 self.round = int(file.readline())
                 self.playerToPlay = self.player1 if int(file.readline()) == 1 else self.player2
                 self.playerPlaced = int(file.readline())
-                self.botMode = bool(file.readline())
+                self.botMode = True if file.readline() == "True\n" else False
 
                 player1_coords = tuple(map(int, file.readline().split()))
                 player2_coords = tuple(map(int, file.readline().split()))
