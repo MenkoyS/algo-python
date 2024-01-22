@@ -35,6 +35,11 @@ from pygame import mixer # ~~> Pour musique de fond ici
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
+        """
+        Initialise l'objet WelcomeTextAnimator
+        :param root: Fenêtre racine
+        :param label: Label à animer
+        """
         self.root = root
         self.label = label
 
@@ -46,6 +51,9 @@ class WelcomeTextAnimator:
         self.textToWrite = self.text
 
     def animateText(self):
+        """
+        Anime le texte
+        """
         self.label.config(text=self.textAlreadyWritten)
 
         if self.textToWrite:
@@ -58,6 +66,9 @@ class WelcomeTextAnimator:
 
 class LobbyGUI:
     def __init__(self):
+        """
+        Initialise l'objet LobbyGUI
+        """
         self.initializeWindow()
         self.initializeAudio()
         self.initializeVariables()
@@ -106,6 +117,9 @@ class LobbyGUI:
         self.welcomeTextAnimator.animateText()
 
     def initializeWindow(self):
+        """
+        Initialise la fenêtre
+        """
         self.root = ThemedTk(theme="black")
         self.root.title("Game Lobby")
         self.root.geometry(f"{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}")
@@ -113,12 +127,18 @@ class LobbyGUI:
         self.root.attributes('-fullscreen', True)
 
     def initializeAudio(self):
+        """
+        Initialise l'audio
+        """
         mixer.init()
         mixer.music.load('./assets/sounds/AmbientGuitarLobby.mp3')
         mixer.music.set_volume(0.5)
         mixer.music.play(-1)
 
     def initializeVariables(self):
+        """
+        Initialise les variables
+        """
         self.sizeVar = tk.DoubleVar(value=10)
         self.pawnVar = tk.DoubleVar(value=5)
         self.volumeVar = tk.DoubleVar(value=50)
@@ -126,6 +146,15 @@ class LobbyGUI:
         self.pawnCanvases = []
 
     def createPositionCanvases(self, frame, values, positions, yPosition, anchor, canvases):
+        """
+        Crée des canvas pour afficher les positions des sliders
+        :param frame: Frame dans laquelle les canvas seront placés
+        :param values: Valeurs des sliders
+        :param positions: Positions des canvas
+        :param yPosition: Position Y des canvas
+        :param anchor: Ancrage des canvas
+        :param canvases: Liste dans laquelle les canvas seront ajoutés
+        """
         screenWidth = self.root.winfo_screenwidth()
         for i, value in enumerate(values):
             if i < len(positions):
@@ -135,20 +164,35 @@ class LobbyGUI:
                 canvases.append(canvas)
 
     def updateSizeSliderLabel(self, event=None):
+        """
+        Met à jour le label du slider de taille
+        :param event: Événement
+        """
         selectedSize = round(self.sizeVar.get())
         self.sizeVar.set(selectedSize)
         self.sizeLabel["text"] = f"Size: {selectedSize}x{selectedSize}"
 
     def updatePawnSliderLabel(self, event=None):
+        """
+        Met à jour le label du slider de pion
+        :param event: Événement
+        """
         selectedPawn = round(self.pawnVar.get())
         self.pawnVar.set(selectedPawn)
         self.pawnLabel["text"] = f"Chosen Pawn: {selectedPawn}"
 
     def updateVolume(self, event=None):
+        """
+        Met à jour le volume
+        :param event: Événement
+        """
         volumeLevel = self.volumeVar.get() / 100
         mixer.music.set_volume(volumeLevel)
 
     def toggleFullscreen(self):
+        """
+        Bascule le mode plein écran
+        """
         if self.root.attributes('-fullscreen'):
             self.root.attributes('-fullscreen', False)
             self.switchButton["text"] = "Go fullscreen"
@@ -158,11 +202,17 @@ class LobbyGUI:
             self.switchButton["text"] = "Go windowed"
 
     def confirmQuit(self):
+        """
+        Demande une confirmation avant de quitter
+        """
         result = messagebox.askquestion("Confirmation", "Do you really want to leave?")
         if result == 'yes':
             self.root.destroy()
 
     def openNewWindow(self):
+        """
+        Ouvre une nouvelle fenêtre
+        """
         self.root.destroy()
         mixer.music.stop()
         game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()), botMode=False)
@@ -170,6 +220,9 @@ class LobbyGUI:
         newWindow.run()
 
     def commandeBot(self):
+        """
+        Ouvre une nouvelle fenêtre
+        """
         self.root.destroy()
         mixer.music.stop()
         game = Game(rows=int(self.sizeVar.get()), columns=int(self.sizeVar.get()), pawnsToAlign=int(self.pawnVar.get()), botMode=True)
@@ -177,6 +230,9 @@ class LobbyGUI:
         newWindow.run()
 
     def run(self):
+        """
+        Lance le programme
+        """
         try:
             import tkinter as tk
             import os

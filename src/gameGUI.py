@@ -6,7 +6,15 @@ from tkinter import ttk
 from pygame import mixer
 
 class GameGUI:
+    """
+    A class representing the graphical user interface for the game.
+    """
+
     def __init__(self, game) -> None:
+        """
+        Initializes the GameGUI object.
+        :param game: The game object.
+        """
         self.game = game
         self.initWindow()
         mixer.init()
@@ -17,6 +25,48 @@ class GameGUI:
         self.updateRound()
 
     def initWindow(self) -> None:
+        """
+        Initializes the main window of the GUI.
+        """
+        self.window = tk.Tk()
+        self.window.title("GameGUI")
+        self.setupFullscreen()
+        self.window.config(bg="black")
+
+        self.boardFrame = self.createBoardFrame()
+        self.canvases = self.createBoardCanvases()
+        self.updateBoard()
+
+        self.buttonFrame = self.createButtonFrame()
+        self.setupButtons()
+
+        self.turnLabel = tk.Label(self.buttonFrame, text="Turn: Player 1", font=(
+            "Arial", 20), bg="black", fg="white")
+        self.turnLabel.pack()
+
+        self.roundLabel = tk.Label(self.buttonFrame, text="Round: 1", font=(
+            "Arial", 20), bg="black", fg="white")
+        self.roundLabel.pack(pady=40)
+
+class GameGUI:
+    def __init__(self, game) -> None:
+        """
+        Initializes the GameGUI object.
+        :param game: The game object.
+        """
+        self.game = game
+        self.initWindow()
+        mixer.init()
+        self.moveSound = mixer.Sound('assets/sounds/PawnMove.mp3')
+        self.initVolumeBar()
+        self.initializeAudio()
+        self.updatePlayerTurn()
+        self.updateRound()
+
+    def initWindow(self) -> None:
+        """
+        Initializes the main window of the GUI.
+        """
         self.window = tk.Tk()
         self.window.title("GameGUI")
         self.setupFullscreen()
@@ -38,12 +88,19 @@ class GameGUI:
         self.roundLabel.pack(pady=40)
 
     def setupFullscreen(self) -> None:
+        """
+        Sets up the fullscreen mode for the window.
+        """
         self.window.attributes('-fullscreen', True)
         self.window.resizable(False, False)
         self.window.geometry(
             f"{self.window.winfo_screenwidth()}x{self.window.winfo_screenheight()-40}")
 
     def createBoardFrame(self) -> tk.Frame:
+        """
+        Creates the frame containing the board.
+        :return: The frame containing the board.
+        """
         boardFrame = tk.Frame(self.window)
         boardFrame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
@@ -55,6 +112,10 @@ class GameGUI:
         return boardFrame
 
     def createBoardCanvases(self) -> list[list[tk.Canvas]]:
+        """
+        Creates the canvases representing the board.
+        :return: The list of canvases representing the board.
+        """
         cellSize = self.window.winfo_screenheight() // self.game.getRows() - 2
         canvases = [[None for _ in range(self.game.getColumns())]
                     for _ in range(self.game.getRows())]
@@ -72,6 +133,10 @@ class GameGUI:
         return canvases
 
     def createButtonFrame(self) -> tk.Frame:
+        """
+        Creates the frame containing the buttons.
+        :return: The frame containing the buttons.
+        """
         buttonFrame = tk.Frame(self.window)
         buttonFrame.config(width=self.window.winfo_screenwidth(), bg="black")
         buttonFrame.pack(side=tk.RIGHT, padx=100)
@@ -79,6 +144,9 @@ class GameGUI:
         return buttonFrame
 
     def setupButtons(self) -> None:
+        """
+        Sets up the buttons.
+        """
         buttonWidth = self.window.winfo_screenwidth() // 40
         buttonHeight = self.window.winfo_screenheight() // 300
 
@@ -102,24 +170,33 @@ class GameGUI:
 
 
     def initVolumeBar(self):
+        """
+        Initializes the volume bar.
+        """
         self.volumeVar = tk.DoubleVar(value=50)
         volumeSlider = ttk.Scale(self.buttonFrame, from_=0, to=100, variable=self.volumeVar, orient=tk.HORIZONTAL, length=self.window.winfo_screenwidth() // 4, command=self.updateVolume, style="TScale")
         volumeSlider.pack(side=tk.RIGHT, padx=20, pady=30)
 
     def initializeAudio(self):
+        """
+        Initializes the audio.
+        """
         mixer.init()
         mixer.music.load('./assets/sounds/AmbientPianoGame.mp3')
         mixer.music.set_volume(self.volumeVar.get() / 100)
         mixer.music.play(-1)
 
-
-
     def updateVolume(self, event=None):
+        """
+        Updates the volume.
+        """
         volumeLevel = self.volumeVar.get() / 100
         mixer.music.set_volume(volumeLevel)
 
-
     def showRules(self) -> None:
+        """
+        Shows the rules of the game.
+        """
         rulesText = """To win the game, a player must satisfy one of the following two conditions:
         
 --> Align the number of marks of its color you choose in the lobby (horizontally, vertically or in one of the two diagonals). 
@@ -142,6 +219,12 @@ Note that a pawn does not count as a mark.
             self.handlePlayersMoves(row, col)
 
     def placePawn(self, player, row, col) -> None:
+        """
+        Places a pawn on the board.
+        :param player: The player to place the pawn for.
+        :param row: The row to place the pawn on.
+        :param col: The column to place the pawn on.
+        """
         player.setCoordX(col)
         player.setCoordY(row)
         self.game.setCell(row, col, player)
@@ -167,6 +250,11 @@ Note that a pawn does not count as a mark.
         self.updateBoard()
 
     def handlePlayersMoves(self, row, col) -> None:
+        """
+        Handles the players' moves.
+        :param row: The row to place the pawn on.
+        :param col: The column to place the pawn on.
+        """
         if (col, row) in self.game.possibleCell(self.game.getPlayerToPlay()):
             self.game.movePawn(self.game.getPlayerToPlay(), (col, row))
             self.canvases[row][col].config(state=tk.DISABLED)
@@ -209,16 +297,28 @@ Note that a pawn does not count as a mark.
         self.updateBoard()
 
     def updatePlayerTurn(self) -> None:
+        """
+        Updates the player turn label.
+        """
         self.turnLabel.config(text="Turn: Player {}".format(
             self.game.getPlayerToPlay().getPlayer()))
 
     def updateRound(self) -> None:
+        """
+        Updates the round label.
+        """
         self.roundLabel.config(text="Round: {}".format(self.game.getRound()))
 
     def playSoundEffect(self) -> None:
+        """
+        Plays a sound effect.
+        """
         self.moveSound.play()
 
     def updateBoard(self) -> None:
+        """
+        Updates the board.
+        """
         cellSize = self.window.winfo_screenheight() // self.game.getRows() - 2
         for row in range(self.game.getRows()):
             for col in range(self.game.getColumns()):
@@ -248,6 +348,9 @@ Note that a pawn does not count as a mark.
                                        cellSize-20, fill="gray", outline="gray")
 
     def restartGame(self) -> None:
+        """
+        Restarts the game.
+        """
         gameSize = self.game.getColumns()
         pawnsToAlign = self.game.pawnsToAlign
         botMode = self.game.botMode
@@ -266,15 +369,24 @@ Note that a pawn does not count as a mark.
                             detail="You can now play your new game.")
 
     def save(self) -> None:
+        """
+        Saves the game.
+        """
         self.game.saveGame()
         tk.messagebox.showinfo(title="Save Successful", message="Game saved successfully!",
                             detail="You can quit and load your game later.")
 
     def toggleFullscreen(self) -> None:
+        """
+        Toggles the fullscreen mode.
+        """
         self.window.attributes(
             '-fullscreen', not self.window.attributes('-fullscreen'))
 
     def quit(self) -> None:
+        """
+        Quits the game.
+        """
         if tk.messagebox.askquestion(title="Quit", message="Would you really like to quit?") == "yes":
             if tk.messagebox.askquestion(title="Save before quitting", message="Would you like to save before quitting?") == "yes":
                 self.save()
@@ -283,4 +395,7 @@ Note that a pawn does not count as a mark.
             exit()
 
     def run(self) -> None:
+        """
+        Runs the GUI.
+        """
         self.window.mainloop()
