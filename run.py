@@ -4,8 +4,25 @@ from src.game import Game
 
 import tkinter as tk
 import os
+import platform 
 
-from PIL import Image, ImageTk
+try: 
+    from pygame import mixer
+    from PIL import Image, ImageTk
+    
+except ImportError as e:
+    print(f"Import Error : {e}")
+    print("Please verify if you have the dependencies required : pip install -r requirements.txt")
+
+    if platform.system() == "Windows":
+        os.system("notepad dependenciesGuide.txt")
+    elif platform.system() == "Linux":
+        os.system("gedit dependenciesGuide.txt")
+    elif platform.system() == "Darwin":  # macOS
+        os.system("open -e dependenciesGuide.txt")
+    else:
+       print("Unsupported operating system.")
+    exit(1) 
 from pygame import mixer
 
 

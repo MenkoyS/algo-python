@@ -1,15 +1,9 @@
-# Prendre des fonctionnalités d'autres fichiers
-from src.game import Game
-from src.gameGUI import GameGUI
 import platform
-
+import os
 
 try:
-    import tkinter as tk
-    import os
     from PIL import Image, ImageTk
     from pygame import mixer
-    from tkinter import ttk, messagebox
     from ttkthemes import ThemedTk
 
 except ImportError as e:
@@ -18,20 +12,21 @@ except ImportError as e:
 
             # Ouvrir le fichier requirements.txt dans un éditeur de texte en fonction du système d'exploitation
             if platform.system() == "Windows":
-                os.system("notepad requirements.txt")
+                os.system("notepad dependenciesGuide.txt")
             elif platform.system() == "Linux":
-                os.system("gedit requirements.txt")
+                os.system("gedit dependenciesGuide.txt")
             elif platform.system() == "Darwin":  # macOS
-                os.system("open -e requirements.txt")
+                os.system("open -e dependenciesGuide.txt")
             else:
                 print("Unsupported operating system.")
             exit(1) 
-            
-# Import des librairies souhaitées
+
+from src.game import Game
+from src.gameGUI import GameGUI
 import tkinter as tk
 from tkinter import ttk, messagebox
 from ttkthemes import ThemedTk
-from pygame import mixer # ~~> Pour musique de fond ici 
+from pygame import mixer
 
 class WelcomeTextAnimator:
     def __init__(self, root, label):
@@ -82,18 +77,31 @@ class LobbyGUI:
         self.welcomeTextAnimator = WelcomeTextAnimator(self.root, welcomeLabel)
 
         labelFontSize = int(self.root.winfo_width() / 1920)
-        ttk.Label(mainFrame, text="Choose the size of the game board", anchor='center', font=("TkDefaultFont", labelFontSize)).grid(columnspan=3, pady=(0, 100))
-        sizeSlider = ttk.Scale(mainFrame, from_=8, to=12, variable=self.sizeVar, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 2, command=self.updateSizeSliderLabel, style="TScale")
+        
+        ttk.Label(mainFrame, text="Choose the size of the game board", anchor='center', 
+                  font=("TkDefaultFont", labelFontSize)).grid(columnspan=3, pady=(0, 100))
+        
+        sizeSlider = ttk.Scale(mainFrame, from_=8, to=12, variable=self.sizeVar, orient=tk.HORIZONTAL, 
+                               length=self.root.winfo_screenwidth() // 2, command=self.updateSizeSliderLabel, style="TScale")
         sizeSlider.grid(row=1, columnspan=2, pady=(20, 10))
+        
         self.createPositionCanvases(mainFrame, [8, 9, 10, 11, 12], [0.5, 12.75, 25, 37.2, 49.5], 260, 'center', self.sizeCanvases)
-        self.sizeLabel = ttk.Label(mainFrame, text=f"Size: {int(self.sizeVar.get())}x{int(self.sizeVar.get())}", anchor='center', font=("TkDefaultFont", labelFontSize))
+        
+        self.sizeLabel = ttk.Label(mainFrame, text=f"Size: {int(self.sizeVar.get())}x{int(self.sizeVar.get())}", 
+                                   anchor='center', font=("TkDefaultFont", labelFontSize))
         self.sizeLabel.grid(row=3, column=0, columnspan=2, pady=(10, 40))
 
-        ttk.Label(mainFrame, text="Choose pawn", anchor='center', font=("TkDefaultFont", labelFontSize)).grid(row=4, column=0, columnspan=3, pady=(10, 10))
-        pawnSlider = ttk.Scale(mainFrame, from_=4, to=6, variable=self.pawnVar, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.updatePawnSliderLabel, style="TScale")
+        ttk.Label(mainFrame, text="Choose pawn", anchor='center', font=("TkDefaultFont", 
+                                                                labelFontSize)).grid(row=4, column=0, columnspan=3, pady=(10, 10))
+        
+        pawnSlider = ttk.Scale(mainFrame, from_=4, to=6, variable=self.pawnVar, orient=tk.HORIZONTAL, 
+                               length=self.root.winfo_screenwidth() // 4, command=self.updatePawnSliderLabel, style="TScale")
         pawnSlider.grid(row=5, column=0, columnspan=2, pady=(20, 10))
+        
         self.createPositionCanvases(mainFrame, [4, 5, 6], [13, 25, 37], 475, 'center', self.pawnCanvases)
-        self.pawnLabel = ttk.Label(mainFrame, text=f"Chosen Pawn: {int(self.pawnVar.get())}", anchor='center', font=("TkDefaultFont", labelFontSize))
+        
+        self.pawnLabel = ttk.Label(mainFrame, text=f"Chosen Pawn: {int(self.pawnVar.get())}", anchor='center', 
+                                   font=("TkDefaultFont", labelFontSize))
         self.pawnLabel.grid(row=6, column=0, columnspan=2, pady=(40, 40))
 
         self.switchButton = ttk.Button(mainFrame, text="Go windowed", command=self.toggleFullscreen)
@@ -108,10 +116,11 @@ class LobbyGUI:
         quitButton = ttk.Button(mainFrame, text="Quit", command=self.confirmQuit)
         quitButton.grid(row=11, column=0, pady=(10, 10), columnspan=2)
 
-        volumeIconLabel = ttk.Label(mainFrame, text="🔊", font=("Segoe UI Emoji", 12))  # Utilisez la police qui prend en charge les emojis
+        volumeIconLabel = ttk.Label(mainFrame, text="🔊", font=("Segoe UI Emoji", 12))
         volumeIconLabel.grid(row=12, column=0, pady=(30, 0), padx=(10, 5), sticky='e')
 
-        volumeSlider = ttk.Scale(mainFrame, from_=0, to=100, variable=self.volumeVar, orient=tk.HORIZONTAL, length=self.root.winfo_screenwidth() // 4, command=self.updateVolume, style="TScale")
+        volumeSlider = ttk.Scale(mainFrame, from_=0, to=100, variable=self.volumeVar, orient=tk.HORIZONTAL, 
+                                 length=self.root.winfo_screenwidth() // 4, command=self.updateVolume, style="TScale")
         volumeSlider.grid(row=12, column=1, columnspan=2, pady=(30, 0), padx=(0, 10), sticky='w')
 
         self.welcomeTextAnimator.animateText()
@@ -230,9 +239,6 @@ class LobbyGUI:
         newWindow.run()
 
     def run(self):
-        """
-        Lance le programme
-        """
         try:
             import tkinter as tk
             import os

@@ -1,7 +1,3 @@
-Pillow==8.3.2
-pygame==2.1.2
-ttkthemes==3.0.0
-
-Commande à éxécuter afin d'avoir toutes les dépendances nécéssaires pour lancer le projet : 
-
-pip install -r requirements.txt
+Pillow==10.2.0
+pygame==2.5.2
+ttkthemes==3.2.2
